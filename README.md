@@ -18,3 +18,4 @@ Mariadb -> Flink -> Kafka -> Iceberg
 * https://phabricator.wikimedia.org/T370354
 * https://iceberg.apache.org/spark-quickstart/#docker-compose
 * https://github.com/tabular-io/docker-spark-iceberg
+* https://mariadb.com/kb/en/installing-and-using-mariadb-via-docker/
