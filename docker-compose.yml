@@ -90,5 +90,41 @@ services:
       - MYSQL_ROOT_PASSWORD=mypass
     ports:
       - 3306:3306
+  jobmanager:
+    image: flink:scala_2.12
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    networks:
+      - iceberg_net
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+  taskmanager:
+    image: flink:scala_2.12
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    networks:
+      - iceberg_net
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2        
+  sql-client:
+    image: flink:scala_2.12
+    command: bin/sql-client.sh
+    networks:
+      - iceberg_net
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        rest.address: jobmanager  
 networks:
   iceberg_net:
