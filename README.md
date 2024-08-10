@@ -13,8 +13,10 @@ Mariadb -> Flink -> Kafka -> Iceberg
 * tabulario/iceberg-rest: Sample REST image for experimentation and testing with Iceberg RESTCatalog implementations
 * minio/minio: Multi-cloud object store compatible with S3
 * minio/mc: Minio Client (mc) provides a modern alternative to UNIX commands like ls, cat, cp, mirror, diff etc
+* mariadb: MariaDB Server is a high performing open source relational database, forked from MySQL
 
 ## Relevant links
 * https://phabricator.wikimedia.org/T370354
 * https://iceberg.apache.org/spark-quickstart/#docker-compose
 * https://github.com/tabular-io/docker-spark-iceberg
+* https://mariadb.com/kb/en/installing-and-using-mariadb-via-docker/
