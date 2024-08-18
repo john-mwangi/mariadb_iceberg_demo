@@ -24,3 +24,4 @@ Mariadb -> Flink -> Kafka -> Iceberg
 * https://github.com/tabular-io/docker-spark-iceberg
 * https://mariadb.com/kb/en/installing-and-using-mariadb-via-docker/
 * https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/resource-providers/standalone/docker/
+* https://hub.docker.com/r/apache/kafka
