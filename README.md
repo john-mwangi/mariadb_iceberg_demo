@@ -8,6 +8,18 @@ Determine the feasibility of:
 ## Implementation pattern
 Mariadb -> Flink -> Kafka -> Iceberg
 
+## Implementation process
+- [x] Install Apache Iceberg with Spark
+- [x] Install MariaDB
+- [x] Install Apache Flink
+- [x] Install Apache Kafka
+- [ ] Test Kafka: create a test topic and manually publish a message to it
+- [ ] Create a destination table in Iceberg (test_table_flink)
+- [ ] Test Kafka -> Iceberg: configure Kafka to deliver messages to destination table in Iceberg from our test topic in Kafka
+- [ ] Configure Flink with source (Mariadb database) and sink (Kafka test topic)
+- [ ] Confirm if implementation pattern is working
+- [ ] Create Python and bash scripts to replicate configurations
+
 ## Services
 * tabulario/spark-iceberg: A simple local setup to try Iceberg. This includes Spark and a Postgres JDBC Catalog.
 * tabulario/iceberg-rest: Sample REST image for experimentation and testing with Iceberg RESTCatalog implementations
