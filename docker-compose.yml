@@ -144,5 +144,7 @@ services:
       KAFKA_NUM_PARTITIONS: 3
     ports:
       - 9092:9092
+    networks:
+      - iceberg_net
 networks:
   iceberg_net:
