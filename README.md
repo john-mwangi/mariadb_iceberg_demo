@@ -9,6 +9,7 @@ Determine the feasibility of:
 Mariadb -> Flink -> Kafka -> Iceberg
 
 ## Implementation process
+Below is the implementation procedure that will be followed, to be updated as necessary:
 - [x] Install Apache Iceberg with Spark
 - [x] Install MariaDB
 - [x] Install Apache Flink
