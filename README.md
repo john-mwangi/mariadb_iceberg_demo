@@ -14,11 +14,17 @@ Below is the implementation procedure that will be followed, to be updated as ne
 - [x] Install MariaDB
 - [x] Install Apache Flink
 - [x] Install Apache Kafka
-- [ ] Test Kafka: create a test topic and manually publish a message to it
-- [ ] Create a destination table in Iceberg (test_table_flink)
-- [ ] Test Kafka -> Iceberg: configure Kafka to deliver messages to destination table in Iceberg from our test topic in Kafka
-- [ ] Configure Flink with source (Mariadb database) and sink (Kafka test topic)
-- [ ] Perform e2e testing
+- [ ] Create a streaming Flink SQL job
+    - [x] Create physical tables in Maria DB
+    - [x] Create source table in Iceberg
+    - [x] Create sink table in Iceberg (Hadoop catalog type)
+    - [x] Create Flink SQL streaming job
+    - [ ] Test streaming job
+- [ ] Create a streaming Flink CDC Kafka job
+    - [ ] Test Kafka: create a test topic and manually publish a message to it
+    - [ ] Create a destination table in Iceberg (test_table_flink)
+    - [ ] Test Kafka -> Iceberg: configure Kafka to deliver messages to destination table in Iceberg from our test topic in Kafka
+    - [ ] Configure Flink with source (Mariadb database) and sink (Kafka test topic)
 - [ ] Add MediaWiki instance
 - [ ] Create Python and bash scripts to replicate configurations
 
