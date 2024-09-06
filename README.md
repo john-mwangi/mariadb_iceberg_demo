@@ -8,6 +8,9 @@ Determine the feasibility of:
 ## Implementation pattern
 Mariadb -> Flink CDC -> Kafka -> Iceberg
 
+## Hosts
+Flink UI: http://157.245.67.21:8081/
+
 ## Implementation process
 Below is the implementation procedure that will be followed, to be updated as necessary:
 - [x] Install Apache Iceberg with Spark
