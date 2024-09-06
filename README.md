@@ -28,7 +28,8 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [ ] Create a destination table in Iceberg (test_table_flink)
     - [ ] Test Kafka -> Iceberg: configure Kafka to deliver messages to destination table in Iceberg from our test topic in Kafka
     - [ ] Configure Flink with source (Mariadb database) and sink (Kafka test topic)
-- [ ] Add MediaWiki instance
+- [ ] Add authentication
+- [ ] Use MediaWiki instance
 - [ ] Create Python and bash scripts to replicate configurations
 
 ## Services
