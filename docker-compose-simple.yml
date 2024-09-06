@@ -3,6 +3,8 @@ services:
       user: flink:flink
       build: .
       command: bin/sql-client.sh
+      networks:
+         - iceberg_net
       depends_on:
          - jobmanager
          - mariadb
@@ -10,11 +12,7 @@ services:
          - |
            FLINK_PROPERTIES=
            jobmanager.rpc.address: jobmanager
-           rest.address: jobmanager                       
-      volumes:
-         - shared-tmpfs:/tmp/iceberg
-      networks:
-         - iceberg_net
+           rest.address: jobmanager
    jobmanager:
       user: flink:flink
       build: .
