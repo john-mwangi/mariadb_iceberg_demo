@@ -9,10 +9,13 @@ services:
          - jobmanager
          - mariadb
       environment:
+         - MYSQL_HOST=mariadb
          - |
            FLINK_PROPERTIES=
            jobmanager.rpc.address: jobmanager
            rest.address: jobmanager
+      volumes:
+         - shared-tmpfs:/tmp/iceberg
    jobmanager:
       user: flink:flink
       build: .
