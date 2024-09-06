@@ -9,10 +9,13 @@ services:
          - jobmanager
          - mariadb
       environment:
+         - MYSQL_HOST=mariadb
          - |
            FLINK_PROPERTIES=
            jobmanager.rpc.address: jobmanager
            rest.address: jobmanager
+      volumes:
+         - shared-tmpfs:/tmp/iceberg
    jobmanager:
       user: flink:flink
       build: .
@@ -45,6 +48,7 @@ services:
    mariadb:
       container_name: mariadb
       image: mariadb:11
+      command: --log-bin=/var/log/mysql/mariadb-bin --binlog-format=ROW
       environment:
          - MYSQL_ROOT_PASSWORD=mypass
       ports:

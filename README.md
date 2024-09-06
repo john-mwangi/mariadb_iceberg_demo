@@ -17,20 +17,22 @@ Below is the implementation procedure that will be followed, to be updated as ne
 - [x] Install MariaDB
 - [x] Install Apache Flink
 - [x] Install Apache Kafka
-- [ ] Create a streaming Flink SQL job
+- [x] Create a streaming Flink SQL job
     - [x] Create physical tables in Maria DB
     - [x] Create source table in Iceberg
     - [x] Create sink table in Iceberg (Hadoop catalog type)
     - [x] Create Flink SQL streaming job
-    - [ ] Test streaming job
+    - [x] Test streaming job
+    - [ ] Create replication user
+    - [ ] Create automation scripts
 - [ ] Create a streaming Flink CDC Kafka job
     - [ ] Test Kafka: create a test topic and manually publish a message to it
     - [ ] Create a destination table in Iceberg (test_table_flink)
     - [ ] Test Kafka -> Iceberg: configure Kafka to deliver messages to destination table in Iceberg from our test topic in Kafka
     - [ ] Configure Flink with source (Mariadb database) and sink (Kafka test topic)
+    - [ ] Create automation scripts
 - [ ] Add authentication
 - [ ] Use MediaWiki instance
-- [ ] Create Python and bash scripts to replicate configurations
 
 ## Services
 * tabulario/spark-iceberg: A simple local setup to try Iceberg. This includes Spark and a Postgres JDBC Catalog.
