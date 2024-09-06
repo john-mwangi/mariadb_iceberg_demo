@@ -6,7 +6,7 @@ Determine the feasibility of:
 * Document learnings along the way
 
 ## Implementation pattern
-Mariadb -> Flink -> Kafka -> Iceberg
+Mariadb -> Flink CDC -> Kafka -> Iceberg
 
 ## Implementation process
 Below is the implementation procedure that will be followed, to be updated as necessary:
