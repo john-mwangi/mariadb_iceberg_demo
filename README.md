@@ -17,12 +17,12 @@ Below is the implementation procedure that will be followed, to be updated as ne
 - [x] Install MariaDB
 - [x] Install Apache Flink
 - [x] Install Apache Kafka
-- [ ] Create a streaming Flink SQL job
+- [x] Create a streaming Flink SQL job
     - [x] Create physical tables in Maria DB
     - [x] Create source table in Iceberg
     - [x] Create sink table in Iceberg (Hadoop catalog type)
     - [x] Create Flink SQL streaming job
-    - [ ] Test streaming job
+    - [x] Test streaming job
     - [ ] Create automation scripts
 - [ ] Create a streaming Flink CDC Kafka job
     - [ ] Test Kafka: create a test topic and manually publish a message to it
