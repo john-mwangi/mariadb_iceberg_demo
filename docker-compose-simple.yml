@@ -48,6 +48,7 @@ services:
    mariadb:
       container_name: mariadb
       image: mariadb:11
+      command: --log-bin=/var/log/mysql/mariadb-bin --binlog-format=ROW
       environment:
          - MYSQL_ROOT_PASSWORD=mypass
       ports:
