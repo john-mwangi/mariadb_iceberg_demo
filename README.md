@@ -23,6 +23,7 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Create sink table in Iceberg (Hadoop catalog type)
     - [x] Create Flink SQL streaming job
     - [x] Test streaming job
+    - [ ] Create replication user
     - [ ] Create automation scripts
 - [ ] Create a streaming Flink CDC Kafka job
     - [ ] Test Kafka: create a test topic and manually publish a message to it
