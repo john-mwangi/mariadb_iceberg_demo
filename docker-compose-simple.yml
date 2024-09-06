@@ -1,10 +1,8 @@
 services:
    sql-client:
       user: flink:flink
-      image: flink:scala_2.12
-      command: bash -c "curl -Lo /opt/flink/lib/flink-sql-connector-mysql-cdc-3.0.1.jar https://repo1.maven.org/maven2/com/ververica/flink-sql-connector-mysql-cdc/3.0.1/flink-sql-connector-mysql-cdc-3.0.1.jar && bin/sql-client.sh"
-      # build: .
-      # command: bin/sql-client.sh
+      build: .
+      command: bin/sql-client.sh
       networks:
          - iceberg_net
       depends_on:
