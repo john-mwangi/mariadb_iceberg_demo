@@ -30,10 +30,10 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Create Flink SQL streaming job
     - [x] Test streaming job
     - [x] Create automation scripts
-- [ ] Use MediaWiki instance
+- [ ] Add MediaWiki instance
     - [ ] Create replication user
     - [ ] Add authentication
-    - [ ] Add MediaWiki docker
+    - [ ] Use MediaWiki docker
 - [ ] Create a streaming Flink CDC Kafka job
     - [ ] Test Kafka: create a test topic and manually publish a message to it
     - [ ] Create a destination table in Iceberg (test_table_flink)
