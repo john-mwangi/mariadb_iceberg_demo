@@ -8,8 +8,13 @@ Determine the feasibility of:
 ## Implementation pattern
 Mariadb -> Flink CDC -> Kafka -> Iceberg
 
+## Running the services
+```
+docker compose -f docker-compose-simple.yml up --build --remove-orphans -d
+```
+
 ## Hosts
-Flink UI: http://157.245.67.21:8081/
+Flink UI: http://localhost:8081/
 
 ## Implementation process
 Below is the implementation procedure that will be followed, to be updated as necessary:
@@ -23,8 +28,8 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Create sink table in Iceberg (Hadoop catalog type)
     - [x] Create Flink SQL streaming job
     - [x] Test streaming job
+    - [x] Create automation scripts
     - [ ] Create replication user
-    - [ ] Create automation scripts
 - [ ] Create a streaming Flink CDC Kafka job
     - [ ] Test Kafka: create a test topic and manually publish a message to it
     - [ ] Create a destination table in Iceberg (test_table_flink)
