@@ -4,7 +4,6 @@ services:
       build:
          context: dockerfiles
          dockerfile: Dockerfile.client
-      # command: bin/sql-client.sh -e "SET execution.checkpointing.interval = '3s';"
       networks:
          - iceberg_net
       depends_on:
@@ -53,8 +52,6 @@ services:
          - iceberg_net
    mariadb:
       container_name: mariadb
-      # image: mariadb:11
-      # command: --log-bin=/var/log/mysql/mariadb-bin --binlog-format=ROW
       build:
          context: dockerfiles
          dockerfile: Dockerfile.mariadb
