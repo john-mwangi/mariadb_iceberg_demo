@@ -10,7 +10,7 @@ Mariadb -> Flink CDC -> Kafka -> Iceberg
 
 ## Running the services
 ```
-docker compose -f docker-compose-simple.yml up --build --remove-orphans -d
+docker compose -f docker-compose.yml up --build --remove-orphans -d
 ```
 
 ## Hosts
