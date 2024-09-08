@@ -16,8 +16,7 @@ COPY scripts/create_jobs.sql /opt/flink/scripts/create_jobs.sql
 #     sleep 10; \
 #     done; if [ $n -ge 60 ]; then echo "Command failed after several attempts."; fi'
 
-# CMD ["bin/sql-client"]
-
 # TODO: put create_jobs.sql under a RUN command
 # CMD ["bin/sql-client.sh", "-f", "/opt/flink/scripts/create_jobs.sql"]
+
 CMD ["sql-client.sh"]
