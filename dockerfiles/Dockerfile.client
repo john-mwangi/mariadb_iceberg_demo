@@ -8,4 +8,16 @@ RUN curl -Lo /opt/flink/lib/flink-sql-connector-mysql-cdc-3.0.1.jar https://repo
 
 COPY scripts/create_jobs.sql /opt/flink/scripts/create_jobs.sql
 
-CMD ["bin/sql-client.sh", "-f", "/opt/flink/scripts/create_jobs.sql"]
+# Retry for 10min
+# RUN bash -c 'n=0; until [ $n -ge 60 ]; do \
+#     bin/sql-client.sh -f /opt/flink/scripts/create_jobs.sql && break; \
+#     n=$((n+1)); \
+#     echo "Attempt $n failed. Retrying in 10 seconds..."; \
+#     sleep 10; \
+#     done; if [ $n -ge 60 ]; then echo "Command failed after several attempts."; fi'
+
+# CMD ["bin/sql-client"]
+
+# TODO: put create_jobs.sql under a RUN command
+# CMD ["bin/sql-client.sh", "-f", "/opt/flink/scripts/create_jobs.sql"]
+CMD ["sql-client.sh"]
