@@ -1,6 +1,7 @@
 services:
    sql-client:
       user: flink:flink
+      container_name: sqlclient
       build:
          context: dockerfiles
          dockerfile: Dockerfile.client
@@ -19,6 +20,7 @@ services:
          - shared-tmpfs:/tmp/iceberg
    jobmanager:
       user: flink:flink
+      container_name: jobmanager
       build:
          context: dockerfiles
          dockerfile: Dockerfile.main
@@ -35,6 +37,7 @@ services:
          - iceberg_net
    taskmanager:
       user: flink:flink
+      container_name: taskmanager
       build:
          context: dockerfiles
          dockerfile: Dockerfile.main
@@ -45,7 +48,7 @@ services:
          - |
            FLINK_PROPERTIES=
            jobmanager.rpc.address: jobmanager
-           taskmanager.numberOfTaskSlots: 2            
+           taskmanager.numberOfTaskSlots: 10            
       volumes:
          - shared-tmpfs:/tmp/iceberg
       networks:
