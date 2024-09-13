@@ -8,13 +8,20 @@ Determine the feasibility of:
 ## Implementation pattern
 Mariadb -> Flink CDC -> Kafka -> Iceberg
 
-## Running the services
+## Set up
+### 1. Build the services
 ```
 docker compose -f docker-compose.yml up --build --remove-orphans -d
 ```
+### 2. Create a streaming job
+- Log into Flink SQL Client
+```
+docker compose -f docker-compose.yml run sql-client
+```
+- Refer to `dockerfiles/scripts/create_jobs.sql` to create sources and sinks in the DW
 
-## Hosts
-Flink UI: http://localhost:8081/
+### 3. Monitor streaming job
+- Flink UI: http://localhost:8081/
 
 ## Implementation process
 Below is the implementation procedure that will be followed, to be updated as necessary:
