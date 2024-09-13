@@ -42,11 +42,10 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [ ] Create automation scripts
 
 ## Services
-* tabulario/spark-iceberg: A simple local setup to try Iceberg. This includes Spark and a Postgres JDBC Catalog.
-* tabulario/iceberg-rest: Sample REST image for experimentation and testing with Iceberg RESTCatalog implementations
-* minio/minio: Multi-cloud object store compatible with S3
-* minio/mc: Minio Client (mc) provides a modern alternative to UNIX commands like ls, cat, cp, mirror, diff etc
 * mariadb: MariaDB Server is a high performing open source relational database, forked from MySQL
+* sql-client: Interface for creating source and sink tables using SQL, and submitting SQL queries
+* jobmanager: In charge of generating the Flink topological graph and dispatching the jobs to workers
+* taskmanager: Execute the tasks of a dataflow, and buffer and exchange the data streams
 
 ## Rationale
 1. **Why Flink over Debezium?** Though Debezium supports a greater variety of sources and sinks compared to Flink, an internal analysis concluded that the events are very low level and difficult to use them without some translation.
