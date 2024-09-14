@@ -18,7 +18,7 @@ docker compose -f docker-compose.yml up --build --remove-orphans -d
 ```
 docker compose -f docker-compose.yml run sql-client
 ```
-- Refer to `dockerfiles/scripts/create_jobs.sql` to create sources and sinks in the DW
+- Run the SQL commands in `dockerfiles/scripts/create_jobs.sql` to create sources and sinks in the DW
 
 ### 3. Monitor streaming job
 - Flink UI: http://localhost:8081/
