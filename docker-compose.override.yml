@@ -1,0 +1,222 @@
+version: '3.7'
+# services:
+#   mediawiki:
+#     # On Linux, these lines ensure file ownership is set to your host user/group
+#     user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
+
+
+services:
+
+  statsd-exporter:
+    ports:
+      - "9112:9112"
+    image: docker.io/prom/statsd-exporter:v0.22.2
+    command: "--web.listen-address=:9112"
+
+  # eventlogging:
+  #   # image: docker-registry.wikimedia.org/dev/eventlogging:0.0.1
+  #   build: "./extensions/EventLogging/devserver"
+  #   volumes:
+  #     - "./cache/eventgate.devserver.config.yaml:/opt/eventlogging/eventgate.config.yaml"
+  #     - "./cache/primary:/opt/event-schemas-primary"
+  #     - "./cache/secondary:/opt/event-schemas-secondary"
+  #     - "./cache/events:/tmp/events"
+  #   ports:
+  #     - "8192:8192"
+
+  mediawiki:
+    image: docker-registry.wikimedia.org/dev/buster-php74-fpm:latest
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+    # To learn about configuring Kafka for access across networks see
+    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+     - "9092:9092"
+    depends_on:
+     - zookeeper
+    environment:
+     KAFKA_BROKER_ID: 1
+     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+      # eventgate:
+      #   image: docker-registry.wikimedia.org/wikimedia/eventgate-wikimedia:2023-10-17-204606-production
+      #   depends_on:
+      #     - zookeeper
+      #     - broker
+      #   ports:
+      #     - "8192:8192"
+      #   volumes:
+      #     # - "./cache/eventgate.devserver.config.yaml:/srv/service/eventgate.config.yaml"
+      #     - "./cache/eventgate.config.yaml:/srv/service/eventgate.config.yaml"
+      #     - "./cache/primary:/opt/event-schemas-primary"
+    #     - "./cache/secondary:/opt/event-schemas-secondary"
+    #     - "./cache/events:/tmp/events"
+
+    #   entrypoint: /srv/service/node_modules/.bin/eventgate -c  eventgate.config.yaml
+
+
+
+  eventgate-dev:
+    image: eventgate-wikimedia:dev2
+    ports:
+      - "8192:8192"
+    volumes:
+      - "./cache/eventgate.devserver.config.yaml:/srv/service/eventgate.config.yaml"
+      - "./cache/primary:/opt/event-schemas-primary"
+      - "./cache/secondary:/opt/event-schemas-secondary"
+      - "./cache/events:/tmp/events"
+
+    entrypoint: /srv/service/node_modules/.bin/eventgate -c  eventgate.config.yaml
+
+  mariadb-main:
+    image: 'bitnami/mariadb:latest'
+    volumes:
+      - mariadbdata:/bitnami/mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=repl_password
+      - MARIADB_ROOT_PASSWORD=main_root_password
+      - MARIADB_USER=my_user
+      - MARIADB_PASSWORD=my_password
+      - MARIADB_DATABASE=my_database
+  mariadb-replica:
+    image: 'bitnami/mariadb:latest'
+    ports:
+      - "3307:3306"
+    depends_on:
+      - mariadb-main
+    environment:
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=repl_password
+      - MARIADB_MASTER_HOST=mariadb-main
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_ROOT_PASSWORD=main_root_password
+
+  flink-jobmanager:
+    build:
+      context: dockerfiles
+      dockerfile: ./Dockerfile.flink1
+    volumes:
+      - ./cache/flink/warehouse:/user/hive/warehouse
+    ports:
+      - "8081:8081"
+    hostname: jobmanager
+    # command: HADOOP_CLASSPATH=$(/opt/hadoop-2.10.2/bin/hadoop classpath) jobmanager
+    command: jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
+        execution.checkpointing.interval: 3000
+
+
+  flink-taskmanager:
+    build:
+      context: dockerfiles
+      dockerfile: ./Dockerfile.flink-cdc-pipeline
+    volumes:
+      - ./cache/flink/warehouse:/user/hive/warehouse
+    deploy:
+      replicas: 8
+    hostname: taskmanager
+    depends_on:
+      - flink-jobmanager
+    # command: HADOOP_CLASSPATH=$(/opt/hadoop-2.10.2/bin/hadoop classpath) taskmanager
+    command: taskmanager
+    #
+    #    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2
+        execution.checkpointing.interval: 3000
+
+  flink-launcher:
+    build:
+      context: dockerfiles
+      dockerfile: ./Dockerfile.flink-cdc-pipeline
+    volumes:
+      - ./cache/flink/flink-cdc:/tmp/flink-cdc
+      - ./cache/flink/warehouse:/user/hive/warehouse
+    hostname: flink-launcher
+    depends_on:
+      - flink-jobmanager
+      - flink-taskmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        rest.address: jobmanager
+
+
+  # flink-sql-client:
+  #   build:
+  #     context: dockerfiles
+  #     dockerfile: ./Dockerfile.flink-sql
+  #   volumes:
+  #     - ./cache/flink/flink-cdc:/tmp/flink-cdc
+  #     - ./cache/flink/warehouse:/tmp/warehouse
+  #   hostname: flink-sql-client
+  #   depends_on:
+  #     - flink-jobmanager
+  #     - flink-taskmanager
+  #   environment:
+  #     - |
+  #       FLINK_PROPERTIES=
+  #       jobmanager.rpc.address: jobmanager
+  #       rest.address: jobmanager
+  #   command: bin/sql-client.sh
+
+  # flink-cdc-pipeline:
+  #   build:
+  #     context: dockerfiles
+  #     dockerfile: ./Dockerfile.flink-cdc-pipeline
+  #   volumes:
+  #     - ./cache/flink/flink-cdc:/tmp/flink-cdc
+  #     - ./cache/flink/warehouse:/user/hive/warehouse
+  #   command: bin/sql-client.sh
+  #   hostname: sql-client
+  #   depends_on:
+  #     - flink-jobmanager
+  #   environment:
+  #     - |
+  #       FLINK_PROPERTIES=
+  #       jobmanager.rpc.address: jobmanager
+  #       rest.address: jobmanager
+
+  hive-metastore:
+    image: ghcr.io/criccomini/hive-metastore-standalone:latest
+    hostname: hive-metastore
+    ports:
+      - "9083:9083"
+
+  mariadb-client:
+    image: logiqx/mysql-client
+    command: mysql --host=mariadb-main --database=my_database --user=root --password=main_root_password
+    depends_on:
+      - mariadb-main
+
+volumes:
+  mariadbdata:
+    driver: local
+

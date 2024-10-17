@@ -1,0 +1,25 @@
+source:
+  type: mysql
+  name: MySQL Source
+  hostname: mariadb-main
+  port: 3306
+  username: root
+  password: main_root_password
+  tables: my_database.page # , my_database.revision, my_database.slots, my_database.content
+  server-id: 5401-5404
+
+sink:
+  type: paimon
+  name: Paimon Sink
+  catalog.properties.metastore: filesystem
+  catalog.properties.warehouse: /tmp/warehouse/paimon0
+  # table.properties.auto-create: true
+
+pipeline:
+  name: MySQL to Paimon Pipeline
+  parallelism: 4
+
+route:
+  - source-table: my_database.page
+    sink-table: page
+    description: sink to catalog database name
