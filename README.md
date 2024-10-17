@@ -55,9 +55,6 @@ Below is the implementation procedure that will be followed, to be updated as ne
 * jobmanager: In charge of generating the Flink topological graph and dispatching the jobs to workers
 * taskmanager: Execute the tasks of a dataflow, and buffer and exchange the data streams
 
-## Rationale
-1. **Why Flink over Debezium?** Though Debezium supports a greater variety of sources and sinks compared to Flink, an internal analysis concluded that the events are very low level and difficult to use them without some translation.
-
 ## Relevant links
 * https://phabricator.wikimedia.org/T370354
 * https://iceberg.apache.org/spark-quickstart/#docker-compose
