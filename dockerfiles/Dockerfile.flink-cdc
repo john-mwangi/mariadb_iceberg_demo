@@ -1,3 +1,6 @@
+# Run download_dependencies.sh before using this Dockerfile.
+
+
 FROM flink:1.17.0-scala_2.12
 USER flink:flink
 
