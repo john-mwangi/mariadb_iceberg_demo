@@ -35,7 +35,6 @@ services:
          - shared-tmpfs:/tmp/iceberg
       networks:
          - iceberg_net
-      mem_limit: 1g
    taskmanager:
       user: flink:flink
       container_name: taskmanager
@@ -54,7 +53,6 @@ services:
          - shared-tmpfs:/tmp/iceberg
       networks:
          - iceberg_net
-      mem_limit: 1g
    mariadb:
       container_name: mariadb
       build:

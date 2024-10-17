@@ -1,0 +1,261 @@
+[
+    {
+        "Id": "63aba0f46286e206c7e12f5161208481391680de6e4263ea10ba48bb69e204e3",
+        "Created": "2024-09-14T11:28:18.119343065Z",
+        "Path": "/docker-entrypoint.sh",
+        "Args": [
+            "jobmanager"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": true,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 137,
+            "Error": "",
+            "StartedAt": "2024-09-14T11:28:18.379573332Z",
+            "FinishedAt": "2024-09-14T11:52:34.475155952Z"
+        },
+        "Image": "sha256:60068f62f7366852c424ae95df022c3e794b22acd2d128262b7de4125c13dad1",
+        "ResolvConfPath": "/var/lib/docker/containers/63aba0f46286e206c7e12f5161208481391680de6e4263ea10ba48bb69e204e3/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/63aba0f46286e206c7e12f5161208481391680de6e4263ea10ba48bb69e204e3/hostname",
+        "HostsPath": "/var/lib/docker/containers/63aba0f46286e206c7e12f5161208481391680de6e4263ea10ba48bb69e204e3/hosts",
+        "LogPath": "/var/lib/docker/containers/63aba0f46286e206c7e12f5161208481391680de6e4263ea10ba48bb69e204e3/63aba0f46286e206c7e12f5161208481391680de6e4263ea10ba48bb69e204e3-json.log",
+        "Name": "/jobmanager",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "mariadb_iceberg_demo_iceberg_net",
+            "PortBindings": {
+                "8081/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8081"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 1073741824,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 2147483648,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "mariadb_iceberg_demo_shared-tmpfs",
+                    "Target": "/tmp/iceberg",
+                    "VolumeOptions": {}
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/75996e3a3d7372328efbb4b1a210120f5a1a2d364f029a0b4cbaf78ddf15c41c-init/diff:/var/lib/docker/overlay2/rr5nlt166s43x0zbcvwc5f7k7/diff:/var/lib/docker/overlay2/5b3afe67045b21efe4d0c38b7a8ae5c441ef9a031d8e1e5d5f8b29ee3a125a2d/diff:/var/lib/docker/overlay2/02d4b381926b9a181765701fe7b11d04a64ed74eacdf295f98058b472eb25f2f/diff:/var/lib/docker/overlay2/59a1f453ef0bbbfa93c9baf58b0479147adaa5cf4c43e8d8d4a2440e8f04337b/diff:/var/lib/docker/overlay2/a3151db0b24cd3360d157edb04f5e7da1d12bd602e7eb8e2aeb9e2a18ef8c828/diff:/var/lib/docker/overlay2/37bee1dd7b3fe17f5eaf0dc8f1b97b2d9041b57aad858bff64aa84be41ebfb32/diff:/var/lib/docker/overlay2/008f43248429cb10849bef65083b6e4ec244c628af0241c72f15814451a530fc/diff:/var/lib/docker/overlay2/d315163c5b49abe7a826d30fe01eb8384747fe546d6cb7d0392f0572d4f86be5/diff:/var/lib/docker/overlay2/258e4402bf1d75dbf66edade9a77cf3f02b126b0d80932d4ec7f338c3da47009/diff:/var/lib/docker/overlay2/faf2ee38f73130ccc16899df6626cabda058b0d2e819bfb7d96013a072e4bf8f/diff:/var/lib/docker/overlay2/1b48d989d1e1709c6d46d13fa2ed5184072cac2c998ed3376df1bd113bfe7a1a/diff:/var/lib/docker/overlay2/ade58a0fd658ae66591b264e1ae18ca2b606b88b52deafe4f181e229a5bd3b16/diff",
+                "MergedDir": "/var/lib/docker/overlay2/75996e3a3d7372328efbb4b1a210120f5a1a2d364f029a0b4cbaf78ddf15c41c/merged",
+                "UpperDir": "/var/lib/docker/overlay2/75996e3a3d7372328efbb4b1a210120f5a1a2d364f029a0b4cbaf78ddf15c41c/diff",
+                "WorkDir": "/var/lib/docker/overlay2/75996e3a3d7372328efbb4b1a210120f5a1a2d364f029a0b4cbaf78ddf15c41c/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "mariadb_iceberg_demo_shared-tmpfs",
+                "Source": "/var/lib/docker/volumes/mariadb_iceberg_demo_shared-tmpfs/_data",
+                "Destination": "/tmp/iceberg",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "63aba0f46286",
+            "Domainname": "",
+            "User": "flink:flink",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "6123/tcp": {},
+                "8081/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "FLINK_PROPERTIES=\njobmanager.rpc.address: jobmanager            \n",
+                "PATH=/opt/flink/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "LANG=en_US.UTF-8",
+                "LANGUAGE=en_US:en",
+                "LC_ALL=en_US.UTF-8",
+                "JAVA_VERSION=jdk-11.0.24+8",
+                "GOSU_VERSION=1.11",
+                "FLINK_TGZ_URL=https://dlcdn.apache.org/flink/flink-1.20.0/flink-1.20.0-bin-scala_2.12.tgz",
+                "FLINK_ASC_URL=https://downloads.apache.org/flink/flink-1.20.0/flink-1.20.0-bin-scala_2.12.tgz.asc",
+                "GPG_KEY=B2D64016B940A7E0B9B72E0D7D0528B28037D8BC",
+                "CHECK_GPG=true",
+                "FLINK_HOME=/opt/flink"
+            ],
+            "Cmd": [
+                "jobmanager"
+            ],
+            "Image": "mariadb_iceberg_demo-jobmanager",
+            "Volumes": null,
+            "WorkingDir": "/opt/flink",
+            "Entrypoint": [
+                "/docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "cd0f56e576d31d8a1fc44a6733c19a629b89a3e6acdc8445bc07def52b6e8bdb",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:60068f62f7366852c424ae95df022c3e794b22acd2d128262b7de4125c13dad1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "mariadb_iceberg_demo",
+                "com.docker.compose.project.config_files": "/root/mariadb_iceberg_demo/docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/root/mariadb_iceberg_demo",
+                "com.docker.compose.service": "jobmanager",
+                "com.docker.compose.version": "2.29.1",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "mariadb_iceberg_demo_iceberg_net": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "jobmanager",
+                        "jobmanager"
+                    ],
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "NetworkID": "847e40f0261f173f6c43a9499a2a10621a04fcd9508ff82bc85989b5049ce810",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "jobmanager",
+                        "63aba0f46286"
+                    ]
+                }
+            }
+        }
+    }
+]
