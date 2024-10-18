@@ -13,74 +13,8 @@ services:
     image: docker.io/prom/statsd-exporter:v0.22.2
     command: "--web.listen-address=:9112"
 
-  # eventlogging:
-  #   # image: docker-registry.wikimedia.org/dev/eventlogging:0.0.1
-  #   build: "./extensions/EventLogging/devserver"
-  #   volumes:
-  #     - "./cache/eventgate.devserver.config.yaml:/opt/eventlogging/eventgate.config.yaml"
-  #     - "./cache/primary:/opt/event-schemas-primary"
-  #     - "./cache/secondary:/opt/event-schemas-secondary"
-  #     - "./cache/events:/tmp/events"
-  #   ports:
-  #     - "8192:8192"
-
   mediawiki:
     image: docker-registry.wikimedia.org/dev/buster-php74-fpm:latest
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  broker:
-    image: confluentinc/cp-kafka:7.0.1
-    container_name: broker
-    ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
-     - "9092:9092"
-    depends_on:
-     - zookeeper
-    environment:
-     KAFKA_BROKER_ID: 1
-     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
-     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
-      # eventgate:
-      #   image: docker-registry.wikimedia.org/wikimedia/eventgate-wikimedia:2023-10-17-204606-production
-      #   depends_on:
-      #     - zookeeper
-      #     - broker
-      #   ports:
-      #     - "8192:8192"
-      #   volumes:
-      #     # - "./cache/eventgate.devserver.config.yaml:/srv/service/eventgate.config.yaml"
-      #     - "./cache/eventgate.config.yaml:/srv/service/eventgate.config.yaml"
-      #     - "./cache/primary:/opt/event-schemas-primary"
-    #     - "./cache/secondary:/opt/event-schemas-secondary"
-    #     - "./cache/events:/tmp/events"
-
-    #   entrypoint: /srv/service/node_modules/.bin/eventgate -c  eventgate.config.yaml
-
-
-
-  eventgate-dev:
-    image: eventgate-wikimedia:dev2
-    ports:
-      - "8192:8192"
-    volumes:
-      - "./cache/eventgate.devserver.config.yaml:/srv/service/eventgate.config.yaml"
-      - "./cache/primary:/opt/event-schemas-primary"
-      - "./cache/secondary:/opt/event-schemas-secondary"
-      - "./cache/events:/tmp/events"
-
-    entrypoint: /srv/service/node_modules/.bin/eventgate -c  eventgate.config.yaml
 
   mariadb-main:
     image: 'bitnami/mariadb:latest'
@@ -110,12 +44,39 @@ services:
       - MARIADB_MASTER_PORT_NUMBER=3306
       - MARIADB_MASTER_ROOT_PASSWORD=main_root_password
 
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  # Kafka broker
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+    # To learn about configuring Kafka for access across networks see
+    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+     - "9092:9092"
+    depends_on:
+     - zookeeper
+    environment:
+     KAFKA_BROKER_ID: 1
+     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+
   flink-jobmanager:
-    build:
-      context: dockerfiles
-      dockerfile: ./Dockerfile.flink1
+    image: flink-cdc-spike:v1
     volumes:
-      - ./cache/flink/warehouse:/user/hive/warehouse
+      # cache/flink/warehouse will be used to store Flink SQL catalogs
+      - ./flink-cdc-spike/cache/flink/warehouse:/user/hive/warehouse
     ports:
       - "8081:8081"
     hostname: jobmanager
@@ -130,11 +91,11 @@ services:
 
 
   flink-taskmanager:
-    build:
-      context: dockerfiles
-      dockerfile: ./Dockerfile.flink-cdc-pipeline
+    image: flink-cdc-spike:v1
     volumes:
-      - ./cache/flink/warehouse:/user/hive/warehouse
+      # cache/flink/warehouse will be used to store Flink SQL catalogs
+      - ./flink-cdc-spike/cache/flink/warehouse:/user/hive/warehouse
+    # run more task managers!
     deploy:
       replicas: 8
     hostname: taskmanager
@@ -142,8 +103,6 @@ services:
       - flink-jobmanager
     # command: HADOOP_CLASSPATH=$(/opt/hadoop-2.10.2/bin/hadoop classpath) taskmanager
     command: taskmanager
-    #
-    #    scale: 1
     environment:
       - |
         FLINK_PROPERTIES=
@@ -152,12 +111,12 @@ services:
         execution.checkpointing.interval: 3000
 
   flink-launcher:
-    build:
-      context: dockerfiles
-      dockerfile: ./Dockerfile.flink-cdc-pipeline
+    image: flink-cdc-spike:v1
     volumes:
-      - ./cache/flink/flink-cdc:/tmp/flink-cdc
-      - ./cache/flink/warehouse:/user/hive/warehouse
+      # flink-cdc-pipeline-conf has flink cdc pipeline confs
+      - ./flink-cdc-spike/flink-cdc-pipeline-conf:/tmp/flink-cdc-pipeline-conf
+      # cache/flink/warehouse will be used to store Flink SQL catalogs
+      - ./flink-cdc-spike/cache/flink/warehouse:/user/hive/warehouse
     hostname: flink-launcher
     depends_on:
       - flink-jobmanager
@@ -167,42 +126,6 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         rest.address: jobmanager
-
-
-  # flink-sql-client:
-  #   build:
-  #     context: dockerfiles
-  #     dockerfile: ./Dockerfile.flink-sql
-  #   volumes:
-  #     - ./cache/flink/flink-cdc:/tmp/flink-cdc
-  #     - ./cache/flink/warehouse:/tmp/warehouse
-  #   hostname: flink-sql-client
-  #   depends_on:
-  #     - flink-jobmanager
-  #     - flink-taskmanager
-  #   environment:
-  #     - |
-  #       FLINK_PROPERTIES=
-  #       jobmanager.rpc.address: jobmanager
-  #       rest.address: jobmanager
-  #   command: bin/sql-client.sh
-
-  # flink-cdc-pipeline:
-  #   build:
-  #     context: dockerfiles
-  #     dockerfile: ./Dockerfile.flink-cdc-pipeline
-  #   volumes:
-  #     - ./cache/flink/flink-cdc:/tmp/flink-cdc
-  #     - ./cache/flink/warehouse:/user/hive/warehouse
-  #   command: bin/sql-client.sh
-  #   hostname: sql-client
-  #   depends_on:
-  #     - flink-jobmanager
-  #   environment:
-  #     - |
-  #       FLINK_PROPERTIES=
-  #       jobmanager.rpc.address: jobmanager
-  #       rest.address: jobmanager
 
   hive-metastore:
     image: ghcr.io/criccomini/hive-metastore-standalone:latest
