@@ -37,10 +37,6 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Create Flink SQL streaming job
     - [x] Test streaming job
     - [x] Create automation scripts
-- [ ] Add MediaWiki instance
-    - [ ] Create replication user
-    - [ ] Add authentication
-    - [ ] Use MediaWiki docker
 - [ ] Create a streaming Flink CDC Kafka job
     - [ ] Downgrade to [Flink 1.18](https://nightlies.apache.org/flink/flink-cdc-docs-master/docs/connectors/flink-sources/overview/#supported-flink-versions)
     - [ ] Test Kafka: create a test topic and manually publish a message to it
@@ -48,15 +44,16 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [ ] Test Kafka -> Iceberg: configure Kafka to deliver messages to destination table in Iceberg from our test topic in Kafka
     - [ ] Configure Flink with source (Mariadb database) and sink (Kafka test topic)
     - [ ] Create automation scripts
+- [ ] Add MediaWiki instance
+    - [ ] Create replication user
+    - [ ] Add authentication
+    - [ ] Use MediaWiki docker
 
 ## Services
 * mariadb: MariaDB Server is a high performing open source relational database, forked from MySQL
 * sql-client: Interface for creating source and sink tables using SQL, and submitting SQL queries
 * jobmanager: In charge of generating the Flink topological graph and dispatching the jobs to workers
 * taskmanager: Execute the tasks of a dataflow, and buffer and exchange the data streams
-
-## Rationale
-1. **Why Flink over Debezium?** Though Debezium supports a greater variety of sources and sinks compared to Flink, an internal analysis concluded that the events are very low level and difficult to use them without some translation.
 
 ## Relevant links
 * https://phabricator.wikimedia.org/T370354

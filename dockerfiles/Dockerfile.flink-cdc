@@ -1,95 +1,13 @@
 # Run download_dependencies.sh before using this Dockerfile.
 
-
 FROM flink:1.17.0-scala_2.12
 USER flink:flink
 
 
-ARG FLINK_VERSION=1.17.0
-ARG FLINK_MINOR_VERSION=1.17
-ARG SCALA_VERSION=2.12
-ARG FLINK_CDC_VERSION=3.1.0
-ARG HIVE_VERSION=2.3.9    # NOTE: 2.3.6 is not available for later Flink versions.
-ARG KAFKA_CLIENTS_VERSION=3.4.0
+# Directory to which download_dependencies.sh pre-downloaded deps.
+ARG DEPENDENCY_DIR
 
-ARG ICEBERG_VERSION=1.6.1
-
-ARG HADOOP_VERSION=2.10.2
-ARG FLINK_SHADED_HADOOP_2_UBER_VERSION=2.8.3-10.0
-
-# can't parameterize this url, paimon just publishes snapshots?
-# Make sure this matches flink version!
-# paimon lib
-ARG FLINK_PAIMON_URL=https://repository.apache.org/content/groups/snapshots/org/apache/paimon/paimon-flink-1.17/0.9-SNAPSHOT/paimon-flink-1.17-0.9-20240904.002346-78.jar
-# paimon action CLI jars
-ARG FLINK_PAIMON_ACTION_URL=https://repository.apache.org/content/groups/snapshots/org/apache/paimon/paimon-flink-action/0.9-SNAPSHOT/paimon-flink-action-0.9-20240904.002346-77.jar
-
-ARG MYSQL_CONNECTOR_JAVA_VERSION=8.0.27
-
-
-
-# == Add to flink/lib
-
-# flink shaded hadoop 2
-COPY ./dependencies/flink-$FLINK_VERSION/flink-shaded-hadoop-2-uber-*.jar /opt/flink/lib/
-
-# flink mysql-connector-java
-COPY ./dependencies/flink-$FLINK_VERSION/mysql-connector-java*.jar /opt/flink/lib/
-
-# hive exec (needed for sql hive connector?)
-# hive-exec. Needed for org.apache.hadoop.hive.metastore.api.NoSuchObjectException
-COPY ./dependencies/flink-$FLINK_VERSION/hive-exec-*.jar /opt/flink/lib/
-
-
-# == Add to flink/opt
-
-
-# Flink SQL connectors saved to opt/.
-# To use these, pass paths in to sql-client.sh with --jar
-# flink-sql-connector-hive
-COPY ./dependencies/flink-$FLINK_VERSION/flink-sql-connector-hive-*.jar /opt/flink/opt/
-
-# flink-sql-connector-kafka - put in lib for paimon action?
-# TODO: must be a way to pass --jar to paimon action
-COPY ./dependencies/flink-$FLINK_VERSION/flink-sql-connector-kafka-*.jar /opt/flink/opt/
-
-# # flink paimon to opt/ (does this have to go to lib/)
-COPY ./dependencies/flink-$FLINK_VERSION/paimon-flink-$FLINK_MINOR_VERSION-*.jar /opt/flink/opt/
-
-
-# === flink cdc sql connctors to opt/
-# flink mysql-cdc sql connector
-COPY ./dependencies/flink-$FLINK_VERSION/flink-sql-connector-mysql-cdc-*.jar /opt/flink/opt/
-
-# flink iceberg sql connector
-COPY ./dependencies/flink-$FLINK_VERSION/iceberg-flink-runtime-*.jar /opt/flink/opt/
-
-# === Get flink-cdc dist and add lib files to /opt/flink-cdc
-
-# flink-cdc dist allows us to run flink-cdc pipeline launcher script
-COPY ./dependencies/flink-$FLINK_VERSION/flink-cdc*.tar.gz /tmp
-USER root:root
-RUN tar xvzf /tmp/flink-cdc-*.tar.gz -C /opt && chown -R flink:flink /opt/flink-cdc-$FLINK_CDC_VERSION
-USER flink:flink
-
-# === flink cdc pipeline connectors
-# flink mysql-cdc pipeline connector
-COPY ./dependencies/flink-$FLINK_VERSION/flink-cdc-pipeline-connector-mysql-*.jar /opt/flink/opt/
-
-# flink paimon pipeline connector
-COPY ./dependencies/flink-$FLINK_VERSION/flink-cdc-pipeline-connector-paimon-*.jar /opt/flink/opt/
-
-# flink kafka pipeline connector
-COPY ./dependencies/flink-$FLINK_VERSION/flink-cdc-pipeline-connector-kafka-*.jar /opt/flink/opt/
-
-# === Add paimon action jars (for launching pipelines via CLI) to /opt/flink-paimon-action
-# https://paimon.apache.org/docs/master/flink/action-jars/
-
-USER root:root
-RUN mkdir -p /opt/flink-paimon-action && chown flink:flink /opt/flink-paimon-action
-USER flink:flink
-COPY ./dependencies/flink-$FLINK_VERSION/paimon-flink-action*.jar /opt/flink-paimon-action/
-
+# TODO: ????
 
 # Seems that paimon action uses flink-connector-kafka (not sql connector)?
 # RUN curl -Lo /opt/flink/lib/flink-connector-kafka-$FLINK_VERSION.jar \
@@ -100,16 +18,34 @@ COPY ./dependencies/flink-$FLINK_VERSION/paimon-flink-action*.jar /opt/flink-pai
 # RUN curl -Lo /opt/flink/lib/kafka-clients-$KAFKA_CLIENTS_VERSION.jar \
 #     https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/$KAFKA_CLIENTS_VERSION/kafka-clients-$KAFKA_CLIENTS_VERSION.jar
 
-ENV FLINK_HOME=/opt/flink
-# ENV HADOOP_HOME=/opt/hadoop-$HADOOP_VERSION
 
+# == Add lib, opt and conf to /opt/flink
+ADD $DEPENDENCY_DIR/flink /opt/flink
 
+USER root:root
+RUN chown -R flink:flink /opt/flink
+USER flink:flink
+
+# === Get flink-cdc dist and add lib files to /opt/flink-cdc
+
+# flink-cdc dist allows us to run flink-cdc pipeline launcher script
+ADD $DEPENDENCY_DIR/flink-cdc /opt
+
+# paimon action jars (for launching paimon pipelines via CLI)
+ADD $DEPENDENCY_DIR/paimon-action /opt/paimon-action
+
+# chmod dirs back to flink so e.g. log/ dirs can be written to
+USER root:root
+RUN chown -R flink:flink /opt/flink-cdc-*
+RUN chown -R flink:flink /opt/paimon-action
+USER flink:flink
 
 # hive-metastore-standalone expects hive warehouse at /user/hive/warehouse.
 USER root:root
 RUN mkdir -p /user/hive/warehouse && chown -R flink:flink /user/hive/warehouse && chmod -R 777 /user/hive/warehouse
 USER flink:flink
 
-COPY ./hive-site.xml  /opt/flink/conf/hive-site.xml
+ENV FLINK_HOME=/opt/flink
+
 
 
