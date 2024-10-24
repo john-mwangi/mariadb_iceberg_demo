@@ -95,7 +95,7 @@ services:
       - ./flink-cdc-spike/cache/flink/warehouse:/user/hive/warehouse
     # run more task managers!
     deploy:
-      replicas: 8
+      replicas: 1
     hostname: taskmanager
     depends_on:
       - flink-jobmanager
