@@ -21,7 +21,7 @@ services:
     volumes:
       - mariadbdata:/bitnami/mariadb
     ports:
-      - "3306:3306"
+      - "3308:3306"
     environment:
       - MARIADB_REPLICATION_MODE=master
       - MARIADB_REPLICATION_USER=repl_user
@@ -41,7 +41,7 @@ services:
       - MARIADB_REPLICATION_USER=repl_user
       - MARIADB_REPLICATION_PASSWORD=repl_password
       - MARIADB_MASTER_HOST=mariadb-main
-      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_PORT_NUMBER=3308
       - MARIADB_MASTER_ROOT_PASSWORD=main_root_password
 
   # Zookeeper for Kafka
@@ -57,20 +57,19 @@ services:
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
-     - "9092:9092"
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
     depends_on:
-     - zookeeper
+      - zookeeper
     environment:
-     KAFKA_BROKER_ID: 1
-     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
-     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   flink-jobmanager:
     image: flink-cdc-spike:v1
@@ -88,7 +87,6 @@ services:
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2
         execution.checkpointing.interval: 3000
-
 
   flink-taskmanager:
     image: flink-cdc-spike:v1
@@ -142,4 +140,3 @@ services:
 volumes:
   mariadbdata:
     driver: local
-
