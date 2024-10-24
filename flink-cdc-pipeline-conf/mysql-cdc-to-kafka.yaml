@@ -16,7 +16,7 @@ sink:
   sink.add-tableId-to-header-enabled: true
 
 pipeline:
-  name: MySQL to Kafka Pipeline
+  name: MediaWiki MariaDB to Kafka Pipeline
   parallelism: 4
 
 # transform:

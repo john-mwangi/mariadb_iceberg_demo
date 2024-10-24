@@ -189,3 +189,6 @@ notebooks
 !spark/notebooks
 
 .vscode
+.DS_Store
+dockerfiles/dependencies
+cache
