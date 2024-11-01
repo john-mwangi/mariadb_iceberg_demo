@@ -40,3 +40,6 @@ CREATE TABLE all_users_sink (
 
 -- Start a streaming job
 INSERT INTO all_users_sink select * from user_source;
+
+-- Monitor the data warehouse
+SELECT * FROM all_users_sink; 
