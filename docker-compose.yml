@@ -74,10 +74,12 @@ services:
       environment:
          KAFKA_BROKER_ID: 1
          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-         KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-         KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+         KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+         KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+         # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+         # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+         # KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
    zookeeper:
       image: confluentinc/cp-zookeeper:7.7.1
       container_name: zookeeper
@@ -86,26 +88,42 @@ services:
          ZOOKEEPER_TICK_TIME: 2000
       networks:
          - iceberg_net
+   # kafka_connect:
+   #    image: confluentinc/cp-kafka-connect:7.7.1
+   #    container_name: kafka_connect
+   #    depends_on:
+   #       - kafka
+   #    networks:
+   #       - iceberg_net
+   #    environment:
+   #       CONNECT_BOOTSTRAP_SERVERS: kafka:29092,localhost:9092
+   #       CONNECT_REST_PORT: 28082
+   #       CONNECT_GROUP_ID: quickstart
+   #       CONNECT_CONFIG_STORAGE_TOPIC: quickstart-config
+   #       CONNECT_OFFSET_STORAGE_TOPIC: quickstart-offsets
+   #       CONNECT_STATUS_STORAGE_TOPIC: quickstart-status
+   #       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+   #       CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+   #       CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+   #       CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+   #       CONNECT_REST_ADVERTISED_HOST_NAME: localhost
+   #       CONNECT_PLUGIN_PATH: /usr/share/java
    kafka_connect:
-      image: confluentinc/cp-kafka-connect:7.7.1
       container_name: kafka_connect
-      depends_on:
-         - kafka
+      image: debezium/connect:3.0.0.Final
+      ports:
+         - '8083:8083'
+      environment:
+         - BOOTSTRAP_SERVERS=kafka:9092
+         - GROUP_ID=medium_debezium
+         - CONFIG_STORAGE_TOPIC=my_connect_configs
+         - OFFSET_STORAGE_TOPIC=my_connect_offsets
+         - STATUS_STORAGE_TOPIC=my_connect_statuses
+         - CONFIG_STORAGE_REPLICATION_FACTOR=1
+         - OFFSET_STORAGE_REPLICATION_FACTOR=1
+         - STATUS_STORAGE_REPLICATION_FACTOR=1
       networks:
          - iceberg_net
-      environment:
-         CONNECT_BOOTSTRAP_SERVERS: kafka:29092,localhost:9092
-         CONNECT_REST_PORT: 28082
-         CONNECT_GROUP_ID: quickstart
-         CONNECT_CONFIG_STORAGE_TOPIC: quickstart-config
-         CONNECT_OFFSET_STORAGE_TOPIC: quickstart-offsets
-         CONNECT_STATUS_STORAGE_TOPIC: quickstart-status
-         CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-         CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-         CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-         CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-         CONNECT_REST_ADVERTISED_HOST_NAME: localhost
-         CONNECT_PLUGIN_PATH: /usr/share/java
    debezium:
       image: debezium/server:3.0.0.Final
       container_name: debezium
@@ -119,3 +137,4 @@ volumes:
          device: "tmpfs"
 networks:
    iceberg_net:
+      driver: bridge
