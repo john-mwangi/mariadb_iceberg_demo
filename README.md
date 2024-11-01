@@ -46,7 +46,7 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [ ] Create automation scripts
 - [ ] Create streaming job using Debezium
     - [x] Prepare an implementation guide doc
-    - [ ] Create services
+    - [x] Create services
     - [ ] Source (db) configuration
     - [ ] Connector configuration
         - [ ] Source

@@ -64,6 +64,21 @@ services:
          - 3306:3306
       networks:
          - iceberg_net
+   kafka:
+      image: debezium/kafka:3.0.0.Final
+      container_name: kafka
+      networks:
+         - iceberg_net
+   kafka_connect:
+      image: debezium/connect:3.0.0.Final
+      container_name: kafka_connect
+      networks:
+         - iceberg_net
+   debezium:
+      image: debezium/server:3.0.0.Final
+      container_name: debezium
+      networks:
+         - iceberg_net
 volumes:
    shared-tmpfs:
       driver: local
