@@ -46,7 +46,12 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [ ] Create automation scripts
 - [ ] Create streaming job using Debezium
     - [x] Prepare an implementation guide doc
-    - [ ] Implementation plan??
+    - [x] Create services
+    - [x] Source (db) configuration
+    - [ ] Connector configuration
+        - [x] Source
+        - [x] Sink
+        - [ ] Destination
 - [ ] Add MediaWiki instance
     - [ ] Create replication user
     - [ ] Add authentication
