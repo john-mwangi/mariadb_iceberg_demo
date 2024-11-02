@@ -64,6 +64,52 @@ services:
          - 3306:3306
       networks:
          - iceberg_net
+   kafka:
+      image: confluentinc/cp-kafka:7.7.1
+      container_name: kafka
+      depends_on:
+         - zookeeper
+      networks:
+         - iceberg_net
+      environment:
+         KAFKA_BROKER_ID: 1
+         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+         KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+         KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+   zookeeper:
+      image: confluentinc/cp-zookeeper:7.7.1
+      container_name: zookeeper
+      environment:
+         ZOOKEEPER_CLIENT_PORT: 2181
+         ZOOKEEPER_TICK_TIME: 2000
+      networks:
+         - iceberg_net
+   kafka_connect:
+      container_name: kafka_connect
+      image: debezium/connect:3.0.0.Final
+      ports:
+         - '8083:8083'
+      environment:
+         - BOOTSTRAP_SERVERS=kafka:9092
+         - GROUP_ID=medium_debezium
+         - CONFIG_STORAGE_TOPIC=my_connect_configs
+         - OFFSET_STORAGE_TOPIC=my_connect_offsets
+         - STATUS_STORAGE_TOPIC=my_connect_statuses
+         - CONFIG_STORAGE_REPLICATION_FACTOR=1
+         - OFFSET_STORAGE_REPLICATION_FACTOR=1
+         - STATUS_STORAGE_REPLICATION_FACTOR=1
+      networks:
+         - iceberg_net
+   debezium:
+      image: debezium/server:3.0.0.Final
+      container_name: debezium
+      ports:
+         - 8080:8080
+      networks:
+         - iceberg_net
+      volumes:
+         - ./dockerfiles/config/application.properties:/debezium/config/application.properties
 volumes:
    shared-tmpfs:
       driver: local
@@ -72,3 +118,4 @@ volumes:
          device: "tmpfs"
 networks:
    iceberg_net:
+      driver: bridge

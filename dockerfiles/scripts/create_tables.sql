@@ -2,6 +2,11 @@
 -- SHOW VARIABLES LIKE '%log%';
 -- SHOW MASTER STATUS;
 
+-- Create users
+CREATE USER 'debezium-user'@localhost IDENTIFIED BY 'debezium-user-pw';
+GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium-user' IDENTIFIED BY 'debezium-user-pw';
+FLUSH PRIVILEGES;
+
 CREATE DATABASE db_1;
  USE db_1;
  CREATE TABLE user_1 (
