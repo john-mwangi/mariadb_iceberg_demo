@@ -104,6 +104,8 @@ services:
    debezium:
       image: debezium/server:3.0.0.Final
       container_name: debezium
+      ports:
+         - 8080:8080
       networks:
          - iceberg_net
       volumes:
