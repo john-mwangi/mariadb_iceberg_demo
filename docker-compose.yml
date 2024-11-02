@@ -106,6 +106,8 @@ services:
       container_name: debezium
       networks:
          - iceberg_net
+      volumes:
+         - ./dockerfiles/config/application.properties:/debezium/config/application.properties
 volumes:
    shared-tmpfs:
       driver: local
