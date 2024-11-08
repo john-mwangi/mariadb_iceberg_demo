@@ -4,7 +4,7 @@
 -- SHOW GLOBAL VARIABLES WHERE variable_name = 'binlog_row_value_options';
 
 -- Set global variables
-SET @@global.binlog_row_value_options="" ;
+-- SET @@global.binlog_row_value_options="" ;
 
 -- Create users
 CREATE USER 'debezium-user'@localhost IDENTIFIED BY 'debezium-user-pw';
