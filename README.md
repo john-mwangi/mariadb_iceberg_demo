@@ -48,6 +48,7 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Prepare an implementation guide doc
     - [x] Create services
     - [x] Source (db) configuration
+    - [x] Add Kafka UI
     - [ ] Connector configuration
         - [x] Source
         - [x] Sink
