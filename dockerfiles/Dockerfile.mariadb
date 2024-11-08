@@ -12,4 +12,4 @@ USER root
 # Scripts placed here will automatically run when the container starts
 COPY scripts/create_tables.sql /docker-entrypoint-initdb.d/
 
-CMD ["--log-bin=/var/log/mysql/mariadb-bin", "--binlog-format=ROW"]
+CMD ["--log-bin=/var/log/mysql/mariadb-bin", "--binlog-format=ROW", "--binlog_row_image=FULL"]

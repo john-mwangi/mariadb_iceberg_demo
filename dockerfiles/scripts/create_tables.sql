@@ -1,12 +1,17 @@
 
 -- SHOW VARIABLES LIKE '%log%';
 -- SHOW MASTER STATUS;
+-- SHOW GLOBAL VARIABLES WHERE variable_name = 'binlog_row_value_options';
+
+-- Set global variables
+SET @@global.binlog_row_value_options="" ;
 
 -- Create users
 CREATE USER 'debezium-user'@localhost IDENTIFIED BY 'debezium-user-pw';
 GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium-user' IDENTIFIED BY 'debezium-user-pw';
 FLUSH PRIVILEGES;
 
+-- Create tables
 CREATE DATABASE db_1;
  USE db_1;
  CREATE TABLE user_1 (
