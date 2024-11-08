@@ -110,6 +110,15 @@ services:
          - iceberg_net
       volumes:
          - ./dockerfiles/config/application.properties:/debezium/config/application.properties
+   kcat:
+      image: edenhill/kcat:1.7.1
+      container_name: kcat
+      links:
+         - kafka
+      entrypoint:
+         - /bin/sh
+         - -c
+         - "apk add jq; while [ 1 -eq 1 ];do sleep 60;done\n"
 volumes:
    shared-tmpfs:
       driver: local
