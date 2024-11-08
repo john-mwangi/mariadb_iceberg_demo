@@ -110,15 +110,19 @@ services:
          - iceberg_net
       volumes:
          - ./dockerfiles/config/application.properties:/debezium/config/application.properties
-   kcat:
-      image: edenhill/kcat:1.7.1
-      container_name: kcat
-      links:
+   kafka-ui:
+      container_name: kafka-ui
+      image: provectuslabs/kafka-ui:v0.7.2
+      volumes:
+         - ./dockerfiles/config/kafka-ui.yaml:/etc/kafkaui/dynamic_config.yaml
+      environment:
+         DYNAMIC_CONFIG_ENABLED: 'true'
+      depends_on:
          - kafka
-      entrypoint:
-         - /bin/sh
-         - -c
-         - "apk add jq; while [ 1 -eq 1 ];do sleep 60;done\n"
+      networks:
+         - iceberg_net
+      ports:
+         - '8082:8080'
 volumes:
    shared-tmpfs:
       driver: local
