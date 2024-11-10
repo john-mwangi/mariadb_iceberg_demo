@@ -46,6 +46,7 @@ SELECT * FROM all_users_sink;
 
 
 -- ******** KAFKA SINK **********
+-- Set checkpoint interval
 
 -- Create sources from Kafka
 CREATE TABLE user_source_kafka (
@@ -60,9 +61,10 @@ CREATE TABLE user_source_kafka (
   ) WITH (
     'connector' ='kafka',
     'topic' = 'users.db_1.user_2',
-    'properties.bootstrap.servers' = 'localhost:9092',
+    'properties.bootstrap.servers' = 'kafka:9092',
     'scan.startup.mode' = 'earliest-offset',
-    'format' = 'debezium-json'
+    'format' = 'debezium-json',
+    'debezium-json.schema-include' = 'true'
   );
 
 -- Create a Kafka sink in Iceberg

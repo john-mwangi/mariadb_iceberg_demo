@@ -48,10 +48,11 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Create services
     - [x] Source (db) configuration
     - [x] Add Kafka UI
-    - [ ] Connector configuration
+    - [x] Connector configuration
         - [x] Source
         - [x] Sink
         - [ ] Destination
+    - [x] Test streaming job
 - [ ] Add MediaWiki instance
     - [ ] Create replication user
     - [ ] Add authentication
