@@ -6,7 +6,9 @@ Determine the feasibility of:
 * Document learnings along the way
 
 ## Implementation pattern
-Mariadb -> Flink CDC -> Kafka -> Iceberg
+**Flink SQL:** Mariadb -> Flink SQL -> Iceberg
+**Flink CDC:** Mariadb -> Flink CDC -> Kafka -> Iceberg
+**Debezium CDC:** Mariadb -> Debezium -> Kafka -> Iceberg
 
 ## Set up
 ### 1. Build the services
@@ -14,14 +16,11 @@ Mariadb -> Flink CDC -> Kafka -> Iceberg
 docker compose -f docker-compose.yml up --build --remove-orphans -d
 ```
 ### 2. Create a streaming job
-- Log into Flink SQL Client
-```
-docker compose -f docker-compose.yml run sql-client
-```
-- Refer to `dockerfiles/scripts/create_jobs.sql` to create sources and sinks in the DW
+Refer to /docs
 
-### 3. Monitor streaming job
+### 3. Monitor streaming jobs
 - Flink UI: http://localhost:8081/
+- Kafka UI: http://localhost:8082/
 
 ## Implementation process
 Below is the implementation procedure that will be followed, to be updated as necessary:
@@ -37,7 +36,7 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Create Flink SQL streaming job
     - [x] Test streaming job
     - [x] Create automation scripts
-- [ ] Create a streaming Flink CDC Kafka job [1]
+- [ ] Create a streaming Flink CDC Kafka job <sup>[1]</sup>
     - [ ] Downgrade to [Flink 1.17](https://nightlies.apache.org/flink/flink-cdc-docs-master/docs/connectors/flink-sources/overview/#supported-flink-versions)
     - [ ] Test Kafka: create a test topic and manually publish a message to it
     - [ ] Create a destination table in Iceberg (test_table_flink)
@@ -60,12 +59,6 @@ Below is the implementation procedure that will be followed, to be updated as ne
 
 ## Notes
 1. Current Flink CDC version doesn't capture the schema. This is planned for [Flink CDC v3.3](https://issues.apache.org/jira/browse/FLINK-36611)
-
-## Services
-* mariadb: MariaDB Server is a high performing open source relational database, forked from MySQL
-* sql-client: Interface for creating source and sink tables using SQL, and submitting SQL queries
-* jobmanager: In charge of generating the Flink topological graph and dispatching the jobs to workers
-* taskmanager: Execute the tasks of a dataflow, and buffer and exchange the data streams
 
 ## Rationale
 **Why Flink over Debezium?** Though Debezium supports a greater variety of sources and sinks compared to Flink, an internal analysis concluded that the events are very low level and difficult to use them without some translation.
