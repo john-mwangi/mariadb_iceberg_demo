@@ -6,9 +6,9 @@ Determine the feasibility of:
 * Document learnings along the way
 
 ## Implementation pattern
-**Flink SQL:** Mariadb -> Flink SQL -> Iceberg
-**Flink CDC:** Mariadb -> Flink CDC -> Kafka -> Iceberg
-**Debezium CDC:** Mariadb -> Debezium -> Kafka -> Iceberg
+1. **Flink SQL:** Mariadb -> Flink SQL -> Iceberg
+1. **Flink CDC:** Mariadb -> Flink CDC -> Kafka -> Iceberg
+1. **Debezium CDC:** Mariadb -> Debezium -> Kafka -> Iceberg
 
 ## Set up
 ### 1. Build the services
