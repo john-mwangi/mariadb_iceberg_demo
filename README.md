@@ -51,7 +51,7 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Connector configuration
         - [x] Source
         - [x] Sink
-        - [ ] Destination
+        - [x] Destination
     - [x] Test streaming job
 - [ ] Add MediaWiki instance
     - [ ] Create replication user
