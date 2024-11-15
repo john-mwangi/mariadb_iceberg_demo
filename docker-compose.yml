@@ -4,7 +4,7 @@ services:
       container_name: sqlclient
       build:
          context: dockerfiles
-         dockerfile: Dockerfile.client
+         dockerfile: Dockerfile.sqlclient
       networks:
          - iceberg_net
       depends_on:
