@@ -4,7 +4,7 @@ It uses Flink SQL instead of Kafka Connect to connect Kafka to Iceberg.
 
 # Implementation
 1. Create Docker services: `docker compose -f docker-compose.yml up --build --remove-orphans -d`
-1. Access Kafka UI to monitor Kafka messages: http://localhost:8082
+1. Access Kafka UI to monitor Kafka messages: http://localhost:8082 (u: admin, p:admin)
 1. Access Flink dashboard to monitor streaming jobs: http://localhost:8081
 1. Access Flink SQL terminal: `docker compose run sql-client`
 
