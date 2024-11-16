@@ -1,4 +1,4 @@
-# Mariadb + Apache Iceberg Demo
+# Mariadb-Iceberg Pipeline
 ## Objectives
 Determine the feasibility of:
 * Maintaining incrementally updated and queryable MediaWiki MariaDB tables in the Data Lake
@@ -49,10 +49,18 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Source (db) configuration
     - [x] Add Kafka UI
     - [x] Connector configuration
-        - [x] Source
-        - [x] Sink
-        - [x] Destination
+        - [x] Source (Maria db)
+        - [x] Sink (Kafka)
+        - [x] Destination (Iceberg)
     - [x] Test streaming job
+- [ ] Paimon
+    - [x] Research
+    - [ ] Add paimon catalog with Kafka as sink
+    - [ ] Test streaming job
+    - [ ] Implement schema evolution support
+    - [ ] Test schema evolution
+    - [ ] Implement Iceberg compatibility
+    - [ ] Test Iceberg compatibility
 - [ ] Add MediaWiki instance
     - [ ] Create replication user
     - [ ] Add authentication
