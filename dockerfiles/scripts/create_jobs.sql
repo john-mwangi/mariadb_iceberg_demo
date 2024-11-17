@@ -50,7 +50,7 @@ SELECT * FROM all_users_sink;
 
 -- Create sources from Kafka
 CREATE TABLE user_source_kafka (
-    database_name STRING METADATA FROM 'value.source.database' VIRTUAL,
+    database_name STRING METADATA FROM 'value.source.db' VIRTUAL,
     table_name STRING METADATA FROM 'value.source.table' VIRTUAL,
     `id` DECIMAL(20, 0) NOT NULL,
     name STRING,
@@ -60,7 +60,8 @@ CREATE TABLE user_source_kafka (
     PRIMARY KEY (`id`) NOT ENFORCED
   ) WITH (
     'connector' ='kafka',
-    'topic' = 'users.db_1.user_2',
+    -- 'topic' = 'users.db_1.user_1;users.db_1.user_2;users.db_2.user_1;users.db_2.user_2',
+    'topic-pattern' = 'users\.db_[0-9]+\.user_[0-9]+',
     'properties.bootstrap.servers' = 'kafka:9092',
     'scan.startup.mode' = 'earliest-offset',
     'format' = 'debezium-json',
