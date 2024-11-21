@@ -86,7 +86,7 @@ CREATE TABLE all_users_sink_kafka (
 ) WITH (
     'connector'='iceberg',
     'catalog-name'='iceberg_catalog',
-    'catalog-type'='hadoop',  
+    'catalog-type'='hadoop',
     'warehouse'='file:///tmp/iceberg/warehouse',
     'format-version'='2'
   );
@@ -97,4 +97,36 @@ INSERT INTO all_users_sink_kafka SELECT * FROM user_source_kafka;
 -- Monitor the table in the dw
 SELECT * FROM all_users_sink_kafka;
 
--- TODO: Create a Kafka sink in Iceberg (without defining a schema) i.e. schema evolution
+-- *************************************************
+-- **************    PAIMON CATALOG    *************
+-- *************************************************
+
+-- Set checkpoint interval
+-- Create Kafka sources
+
+CREATE CATALOG paimon_catalog WITH (
+    'type' = 'paimon',
+    'catalog-type'='hadoop',
+    'warehouse' = 'file:///tmp/paimon/warehouse'
+);
+
+USE CATALOG paimon_catalog;
+
+-- Create a Kafka sink in Paimon
+CREATE TABLE all_users_sink_kafka_paimon (
+  database_name STRING,
+  table_name    STRING,
+  topic         STRING,
+  `id`          DECIMAL(20, 0) NOT NULL,
+  name          STRING,
+  address       STRING,
+  phone_number  STRING,
+  email         STRING,
+  PRIMARY KEY (database_name, table_name, `id`) NOT ENFORCED
+);
+
+  -- Start a streaming job
+INSERT INTO all_users_sink_kafka_paimon SELECT * FROM user_source_kafka;
+
+-- Monitor the table in the dw
+SELECT * FROM all_users_sink_kafka_paimon;
