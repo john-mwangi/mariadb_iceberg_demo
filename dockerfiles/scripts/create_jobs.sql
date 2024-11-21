@@ -45,13 +45,17 @@ INSERT INTO all_users_sink select * from user_source;
 SELECT * FROM all_users_sink; 
 
 
--- ******** KAFKA SINK **********
+-- *************************************************
+-- **************    KAFKA SINK    *****************
+-- *************************************************
+
 -- Set checkpoint interval
 
 -- Create sources from Kafka
 CREATE TABLE user_source_kafka (
-    database_name STRING METADATA FROM 'value.source.db' VIRTUAL,
+    database_name STRING METADATA FROM 'value.source.database' VIRTUAL,
     table_name STRING METADATA FROM 'value.source.table' VIRTUAL,
+    topic STRING METADATA FROM 'topic' VIRTUAL,
     `id` DECIMAL(20, 0) NOT NULL,
     name STRING,
     address STRING,
@@ -72,6 +76,7 @@ CREATE TABLE user_source_kafka (
 CREATE TABLE all_users_sink_kafka (
   database_name STRING,
   table_name    STRING,
+  topic         STRING,
   `id`          DECIMAL(20, 0) NOT NULL,
   name          STRING,
   address       STRING,
@@ -92,4 +97,4 @@ INSERT INTO all_users_sink_kafka SELECT * FROM user_source_kafka;
 -- Monitor the table in the dw
 SELECT * FROM all_users_sink_kafka;
 
--- TODO: Create a Kafka sink in Iceberg (without defining a schema) 
+-- TODO: Create a Kafka sink in Iceberg (without defining a schema) i.e. schema evolution
