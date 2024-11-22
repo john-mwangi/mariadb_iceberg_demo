@@ -100,3 +100,22 @@ INSERT INTO all_users_sink_kafka SELECT * FROM user_source_kafka;
 
 -- Monitor the table in the dw
 SELECT * FROM all_users_sink_kafka;
+
+-- *************************************************
+-- ******    PAIMON KAFKA SYNC ACTION    ***********
+-- *************************************************
+
+docker exec -ti jobmanager bash
+
+# Synchronization from multiple Kafka topics to a Paimon database.
+
+flink run \
+    /opt/flink/lib/paimon-flink-action-1.0-20241111.002633-54.jar \
+    kafka_sync_database \
+    --warehouse file:///tmp/paimon/warehouse \
+    --database db_1 \
+    --kafka_conf properties.bootstrap.servers=kafka:9092 \
+    --kafka_conf topic=users.db_1.user_1\;users.db_1.user_2 \
+    --kafka_conf value.format=debezium-json \
+    --table_conf changelog-producer=input \
+    --kafka_conf scan.startup.mode=earliest-offset
