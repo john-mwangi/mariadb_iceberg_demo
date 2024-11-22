@@ -57,7 +57,7 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Research
     - [ ] Add paimon catalog with Kafka as sink
     - [ ] Test streaming job
-    - [ ] Implement schema evolution support
+    - [x] Implement schema evolution support (Paimon Kafka Sync Action)
     - [ ] Test schema evolution
     - [ ] Implement Iceberg compatibility
     - [ ] Test Iceberg compatibility
