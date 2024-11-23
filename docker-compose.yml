@@ -18,6 +18,7 @@ services:
            rest.address: jobmanager
       volumes:
          - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
    jobmanager:
       user: flink:flink
       container_name: jobmanager
@@ -33,6 +34,7 @@ services:
            jobmanager.rpc.address: jobmanager            
       volumes:
          - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
       networks:
          - iceberg_net
    taskmanager:
@@ -51,6 +53,7 @@ services:
            taskmanager.numberOfTaskSlots: 10            
       volumes:
          - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
       networks:
          - iceberg_net
    mariadb:
