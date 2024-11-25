@@ -2,7 +2,7 @@
 -- **************    FLINK SQL    ******************
 -- *************************************************
 
-SET execution.checkpointing.interval = '3s';
+-- SET execution.checkpointing.interval = '3s'; --set on docker-compose
 
 -- Create sources from DB
 CREATE TABLE user_source (
@@ -105,6 +105,11 @@ SELECT * FROM all_users_sink_kafka;
 -- ******    PAIMON KAFKA SYNC ACTION    ***********
 -- *************************************************
 
+CREATE CATALOG paimon_catalog WITH (
+    'type' = 'paimon',
+    'warehouse' = 'file:///tmp/paimon/warehouse'
+);
+
 docker exec -ti jobmanager bash
 
 # Synchronization from multiple Kafka topics to a Paimon database.
@@ -117,9 +122,19 @@ flink run \
     --kafka_conf topic-pattern=users\.db_[0-9]+\.user_[0-9]+ \
     --kafka_conf value.format=debezium-json \
     --table_conf changelog-producer=input \
-    --kafka_conf scan.startup.mode=earliest-offset \
+    --kafka_conf scan.startup.mode=earliest-offset
+
     --including_tables user_[0-9]+ \
     --table_prefix "ods_" \
-    --table_suffix "_cdc"
-    
-    # --kafka_conf topic=users.db_1.user_1\;users.db_1.user_2\;users.db_2.user_1\;users.db_2.user_2'
+    --table_suffix "_cdc" \
+    --table-conf bucket=4 \
+    --table-conf sink.parallelism=4
+    --kafka_conf topic=users.db_1.user_1\;users.db_1.user_2\;users.db_2.user_1\;users.db_2.user_2'
+
+  USE CATALOG paimon_catalog;
+
+  SHOW DATABASES;
+
+  USE users;
+
+  SHOW TABLES;
