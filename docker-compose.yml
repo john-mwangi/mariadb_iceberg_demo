@@ -16,7 +16,11 @@ services:
            FLINK_PROPERTIES=
            jobmanager.rpc.address: jobmanager
            rest.address: jobmanager
+<<<<<<< HEAD
            execution.checkpointing.interval: 3s
+=======
+           execution.checkpointing.interval: 3000
+>>>>>>> df00365 (Update config)
       volumes:
          - shared-tmpfs:/tmp/iceberg
          - shared-tmpfs:/tmp/paimon
