@@ -16,8 +16,10 @@ services:
            FLINK_PROPERTIES=
            jobmanager.rpc.address: jobmanager
            rest.address: jobmanager
+           execution.checkpointing.interval: 3s
       volumes:
          - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
    jobmanager:
       user: flink:flink
       container_name: jobmanager
@@ -33,6 +35,7 @@ services:
            jobmanager.rpc.address: jobmanager            
       volumes:
          - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
       networks:
          - iceberg_net
    taskmanager:
@@ -51,6 +54,7 @@ services:
            taskmanager.numberOfTaskSlots: 10            
       volumes:
          - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
       networks:
          - iceberg_net
    mariadb:
@@ -83,22 +87,6 @@ services:
       environment:
          ZOOKEEPER_CLIENT_PORT: 2181
          ZOOKEEPER_TICK_TIME: 2000
-      networks:
-         - iceberg_net
-   kafka_connect:
-      container_name: kafka_connect
-      image: debezium/connect:3.0.0.Final
-      ports:
-         - '8083:8083'
-      environment:
-         - BOOTSTRAP_SERVERS=kafka:9092
-         - GROUP_ID=medium_debezium
-         - CONFIG_STORAGE_TOPIC=my_connect_configs
-         - OFFSET_STORAGE_TOPIC=my_connect_offsets
-         - STATUS_STORAGE_TOPIC=my_connect_statuses
-         - CONFIG_STORAGE_REPLICATION_FACTOR=1
-         - OFFSET_STORAGE_REPLICATION_FACTOR=1
-         - STATUS_STORAGE_REPLICATION_FACTOR=1
       networks:
          - iceberg_net
    debezium:

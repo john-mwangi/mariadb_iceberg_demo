@@ -2,7 +2,7 @@
 -- **************    FLINK SQL    ******************
 -- *************************************************
 
-SET execution.checkpointing.interval = '3s';
+-- SET execution.checkpointing.interval = '3s'; --set on docker-compose
 
 -- Create sources from DB
 CREATE TABLE user_source (
@@ -102,20 +102,68 @@ INSERT INTO all_users_sink_kafka SELECT * FROM user_source_kafka;
 SELECT * FROM all_users_sink_kafka;
 
 -- *************************************************
--- ******    PAIMON KAFKA SYNC ACTION    ***********
+-- *****    PAIMON KAFKA TABLE SYNC ACTION    ******
 -- *************************************************
+
+
+CREATE CATALOG paimon_catalog WITH (
+    'type' = 'paimon',
+    'warehouse' = 'file:///tmp/paimon/warehouse'
+);
+
+
+docker exec -ti jobmanager bash
+
+# Synchronisation of one Paimon table to one Kafka topic.
+flink run \
+    /opt/flink/lib/paimon-flink-action-1.0-20241111.002633-54.jar \
+    kafka_sync_table \
+    --warehouse file:///tmp/paimon/warehouse \
+    --database users_ta \
+    --table user_2 \
+    --primary_keys id \
+    --kafka_conf properties.bootstrap.servers=kafka:9092 \
+    --kafka_conf topic=users.db_1.user_2 \
+    --kafka_conf value.format=debezium-json \
+    --table_conf changelog-producer=input \
+    --kafka_conf scan.startup.mode=earliest-offset
+
+SELECT * FROM paimon_catalog.users_ta.user_2;
+
+-- *************************************************
+-- ******    PAIMON KAFKA DB SYNC ACTION    ********
+-- *************************************************
+
+CREATE CATALOG paimon_catalog WITH (
+    'type' = 'paimon',
+    'warehouse' = 'file:///tmp/paimon/warehouse'
+);
 
 docker exec -ti jobmanager bash
 
 # Synchronization from multiple Kafka topics to a Paimon database.
-
 flink run \
     /opt/flink/lib/paimon-flink-action-1.0-20241111.002633-54.jar \
     kafka_sync_database \
     --warehouse file:///tmp/paimon/warehouse \
-    --database db_1 \
+    --database users_da \
     --kafka_conf properties.bootstrap.servers=kafka:9092 \
-    --kafka_conf topic=users.db_1.user_1\;users.db_1.user_2 \
+    --kafka_conf topic-pattern=users\.db_[0-9]+\.user_[0-9]+ \
     --kafka_conf value.format=debezium-json \
     --table_conf changelog-producer=input \
     --kafka_conf scan.startup.mode=earliest-offset
+
+    --including_tables user_[0-9]+ \
+    --table_prefix "ods_" \
+    --table_suffix "_cdc" \
+    --table-conf bucket=4 \
+    --table-conf sink.parallelism=4
+    --kafka_conf topic=users.db_1.user_1\;users.db_1.user_2\;users.db_2.user_1\;users.db_2.user_2'
+
+  USE CATALOG paimon_catalog;
+
+  SHOW DATABASES;
+
+  USE users;
+
+  SHOW TABLES;
