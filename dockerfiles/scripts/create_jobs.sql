@@ -154,6 +154,6 @@ flink run \
     --table_conf auto-create=true
 
   SHOW DATABASES IN paimon_catalog;
-  SHOW TABLES IN users_da;
-  SELECT * FROM users_da.user_1;
-  SELECT * FROM users_da.user_2;
+  SHOW TABLES IN paimon_catalog.users_da;
+  SELECT * FROM paimon_catalog.users_da.user_1;
+  SELECT * FROM paimon_catalog.users_da.user_2;
