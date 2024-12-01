@@ -55,10 +55,10 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Test streaming job
 - [ ] Paimon
     - [x] Research
-    - [ ] Add paimon catalog with Kafka as sink
-    - [ ] Test streaming job
+    - [x] Add paimon catalog with Kafka as sink
+    - [x] Test streaming job
     - [x] Implement schema evolution support (Paimon Kafka Sync Action)
-    - [ ] Test schema evolution
+    - [x] Test schema evolution
     - [ ] Implement Iceberg compatibility
     - [ ] Test Iceberg compatibility
 - [ ] Add MediaWiki instance

@@ -116,7 +116,7 @@ docker exec -ti jobmanager bash
 
 # Synchronisation of one Paimon table to one Kafka topic.
 flink run \
-    /opt/flink/lib/paimon-flink-action-1.0-20241111.002633-54.jar \
+    /opt/flink/lib/paimon-flink-action-0.9.0.jar \
     kafka_sync_table \
     --warehouse file:///tmp/paimon/warehouse \
     --database users_ta \
@@ -143,7 +143,7 @@ docker exec -ti jobmanager bash
 
 # Synchronization from multiple Kafka topics to a Paimon database.
 flink run \
-    /opt/flink/lib/paimon-flink-action-1.0-20241111.002633-54.jar \
+    /opt/flink/lib/paimon-flink-action-0.9.0.jar \
     kafka_sync_database \
     --warehouse file:///tmp/paimon/warehouse \
     --database users_da \
@@ -151,19 +151,12 @@ flink run \
     --kafka_conf topic-pattern=users\.db_[0-9]+\.user_[0-9]+ \
     --kafka_conf value.format=debezium-json \
     --table_conf changelog-producer=input \
-    --kafka_conf scan.startup.mode=earliest-offset
+    --kafka_conf scan.startup.mode=earliest-offset \
+    --primary_keys id \
+    --table_conf bucket=4 \
+    --table_conf auto-create=true
 
-    --including_tables user_[0-9]+ \
-    --table_prefix "ods_" \
-    --table_suffix "_cdc" \
-    --table-conf bucket=4 \
-    --table-conf sink.parallelism=4
-    --kafka_conf topic=users.db_1.user_1\;users.db_1.user_2\;users.db_2.user_1\;users.db_2.user_2'
-
-  USE CATALOG paimon_catalog;
-
-  SHOW DATABASES;
-
-  USE users;
-
-  SHOW TABLES;
+  SHOW DATABASES IN paimon_catalog;
+  SHOW TABLES IN paimon_catalog.users_da;
+  SELECT * FROM paimon_catalog.users_da.user_1;
+  SELECT * FROM paimon_catalog.users_da.user_2;
