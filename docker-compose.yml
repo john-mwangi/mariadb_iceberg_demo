@@ -89,22 +89,6 @@ services:
          ZOOKEEPER_TICK_TIME: 2000
       networks:
          - iceberg_net
-      # kafka_connect:
-      #    container_name: kafka_connect
-      #    image: debezium/connect:3.0.0.Final
-      #    ports:
-      #       - '8083:8083'
-      #    environment:
-      #       - BOOTSTRAP_SERVERS=kafka:9092
-      #       - GROUP_ID=medium_debezium
-      #       - CONFIG_STORAGE_TOPIC=my_connect_configs
-      #       - OFFSET_STORAGE_TOPIC=my_connect_offsets
-      #       - STATUS_STORAGE_TOPIC=my_connect_statuses
-      #       - CONFIG_STORAGE_REPLICATION_FACTOR=1
-      #       - OFFSET_STORAGE_REPLICATION_FACTOR=1
-      #       - STATUS_STORAGE_REPLICATION_FACTOR=1
-      # networks:
-      #    - iceberg_net
    debezium:
       image: debezium/server:3.0.0.Final
       container_name: debezium
