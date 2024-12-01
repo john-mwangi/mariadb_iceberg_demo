@@ -134,7 +134,10 @@ SELECT * FROM paimon_catalog.users_ta.user_2;
 -- ******    PAIMON KAFKA DB SYNC ACTION    ********
 -- *************************************************
 
--- Create paimon_catalog
+CREATE CATALOG paimon_catalog WITH (
+    'type' = 'paimon',
+    'warehouse' = 'file:///tmp/paimon/warehouse'
+);
 
 docker exec -ti jobmanager bash
 
