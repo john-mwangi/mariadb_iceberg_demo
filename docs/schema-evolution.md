@@ -4,6 +4,7 @@ captured in the generated CDC messages, database tables can be automatically
 created in the data warehouse without having to be explicitly defined by the 
 user. These destination schemas are also automatically updated when the source 
 tables are updated. The functionality is currently supported in Paimon.
+
 ![Alt text](./cdc-ingestion-schema-evolution.png "Schema Change Evolution")
 
 # Implementation
@@ -33,5 +34,11 @@ mariadb -uroot -pmypass
 - [ ] Dropping columns
 
 ## Limitations
-- Does not reliably work. For instance, schema changes due to addition of 
+- Does not work reliably. For instance, schema changes due to addition of 
 columns will not reflect in Paimon if a non-supported change is ran first.
+- [Official docs](https://paimon.apache.org/docs/0.8/flink/cdc-ingestion/overview/#schema-change-evolution) 
+mention that modification of columns data types should be supported but this isn't the case.
+
+## Paimon Iceberg Compatibility Mode
+This feature is not supported in the latest stable version of Paimon (v0.9) but 
+is planned for v1.0.
