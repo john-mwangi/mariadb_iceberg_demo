@@ -33,5 +33,5 @@ mariadb -uroot -pmypass
 - [ ] Dropping columns
 
 ## Limitations
-Does not reliably work. For instance, schema changes due to addition of 
+- Does not reliably work. For instance, schema changes due to addition of 
 columns will not reflect in Paimon if a non-supported change is ran first.
