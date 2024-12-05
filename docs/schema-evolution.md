@@ -4,6 +4,7 @@ captured in the generated CDC messages, database tables can be automatically
 created in the data warehouse without having to be explicitly defined by the 
 user. These destination schemas are also automatically updated when the source 
 tables are updated. The functionality is currently supported in Paimon.
+![Alt text](./cdc-ingestion-schema-evolution.png "Schema Change Evolution")
 
 # Implementation
 1. Create Docker services: `docker compose -f docker-compose.yml up --build --remove-orphans -d`
@@ -26,10 +27,10 @@ mariadb -uroot -pmypass
 ```
 
 ## Supported changes
-[x] Addition of columns
-[ ] Modification of data type
-[ ] Renaming of columns
-[ ] Dropping columns
+- [x] Addition of columns
+- [ ] Modification of data type
+- [ ] Renaming of columns
+- [ ] Dropping columns
 
 ## Limitations
 Does not reliably work. For instance, schema changes due to addition of 
