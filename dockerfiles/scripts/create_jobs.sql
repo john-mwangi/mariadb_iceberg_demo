@@ -8,7 +8,7 @@
 CREATE TABLE user_source (
     database_name STRING METADATA VIRTUAL,
     table_name STRING METADATA VIRTUAL,
-    `id` DECIMAL(20, 0) NOT NULL,
+    `id` INTEGER NOT NULL,
     name STRING,
     address STRING,
     phone_number STRING,
@@ -28,7 +28,7 @@ CREATE TABLE user_source (
 CREATE TABLE all_users_sink (
     database_name STRING,
     table_name    STRING,
-    `id`          DECIMAL(20, 0) NOT NULL,
+    `id`          INTEGER NOT NULL,
     name          STRING,
     address       STRING,
     phone_number  STRING,
@@ -60,7 +60,7 @@ CREATE TABLE user_source_kafka (
     database_name STRING METADATA FROM 'value.source.database' VIRTUAL,
     table_name STRING METADATA FROM 'value.source.table' VIRTUAL,
     topic STRING METADATA FROM 'topic' VIRTUAL,
-    `id` DECIMAL(20, 0) NOT NULL,
+    `id` INTEGER NOT NULL,
     name STRING,
     address STRING,
     phone_number STRING,
@@ -81,7 +81,7 @@ CREATE TABLE all_users_sink_kafka (
   database_name STRING,
   table_name    STRING,
   topic         STRING,
-  `id`          DECIMAL(20, 0) NOT NULL,
+  `id`          INTEGER NOT NULL,
   name          STRING,
   address       STRING,
   phone_number  STRING,
@@ -142,17 +142,21 @@ CREATE CATALOG paimon_catalog WITH (
 docker exec -ti jobmanager bash
 
 # Synchronization from multiple Kafka topics to a Paimon database.
+# This action will create one database (users_da) with 2 tables:
+# - user_1 (merging all tables called user_1)
+# - user_2 (merging all tables called user_2)
+
 flink run \
     /opt/flink/lib/paimon-flink-action-0.9.0.jar \
     kafka_sync_database \
     --warehouse file:///tmp/paimon/warehouse \
     --database users_da \
+    --primary_keys id \
     --kafka_conf properties.bootstrap.servers=kafka:9092 \
     --kafka_conf topic-pattern=users\.db_[0-9]+\.user_[0-9]+ \
     --kafka_conf value.format=debezium-json \
     --table_conf changelog-producer=input \
     --kafka_conf scan.startup.mode=earliest-offset \
-    --primary_keys id \
     --table_conf bucket=4 \
     --table_conf auto-create=true
 
