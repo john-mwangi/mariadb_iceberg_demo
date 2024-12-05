@@ -53,14 +53,14 @@ Below is the implementation procedure that will be followed, to be updated as ne
         - [x] Sink (Kafka)
         - [x] Destination (Iceberg)
     - [x] Test streaming job
-- [ ] Paimon
+- [x] Paimon
     - [x] Research
     - [x] Add paimon catalog with Kafka as sink
     - [x] Test streaming job
     - [x] Implement schema evolution support (Paimon Kafka Sync Action)
     - [x] Test schema evolution
-    - [ ] Implement Iceberg compatibility
-    - [ ] Test Iceberg compatibility
+    - [x] Implement Iceberg compatibility
+    - [x] Test Iceberg compatibility
 - [ ] Add MediaWiki instance
     - [ ] Create replication user
     - [ ] Add authentication
