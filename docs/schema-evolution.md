@@ -28,17 +28,16 @@ mariadb -uroot -pmypass
 ```
 
 ## Supported changes
+For these schema changes to reflect, a CRUD operation has to be 
+performed so that a CDC message containing the new schema can be propagated to Kafka.
 - [x] Addition of columns
-- [ ] Modification of data type
-- [ ] Renaming of columns
-- [ ] Dropping columns
+- [x] Modification of data type - [Official docs](https://paimon.apache.org/docs/0.9/flink/cdc-ingestion/overview/#schema-change-evolution) 
+- [x] Renaming of columns - the original column will have a NULL value
+- [x] Dropping columns - deleted columns will have a NULL value
 
 ## Limitations
-- Does not work reliably. For instance, schema changes due to addition of 
-columns will not reflect in Paimon if a non-supported change is ran first.
-- [Official docs](https://paimon.apache.org/docs/0.8/flink/cdc-ingestion/overview/#schema-change-evolution) 
-mention that modification of columns data types should be supported but this isn't the case.
-
-## Paimon Iceberg Compatibility Mode
-This feature is not supported in the latest stable version of Paimon (v0.9) but 
-is planned for v1.0.
+- Paimon Iceberg Compatibility Mode feature is not supported in the latest 
+stable version of Paimon (v0.9) but is planned for v1.0. Though part of the 
+[v0.9 release](https://paimon.apache.org/docs/0.9/maintenance/configurations/), 
+it has not been documented and is undergoing significant revision for the 
+[v1.0 release](https://paimon.apache.org/docs/master/maintenance/configurations/)
