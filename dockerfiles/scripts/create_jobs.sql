@@ -172,7 +172,7 @@ flink run \
     /opt/flink/lib/paimon-flink-action-0.9.0.jar \
     kafka_sync_table \
     --warehouse file:///tmp/paimon/warehouse \
-    --database users_ta2 \
+    --database users_ta_ice \
     --table user_2 \
     --primary_keys id \
     --kafka_conf properties.bootstrap.servers=kafka:9092 \
@@ -185,11 +185,13 @@ flink run \
 CREATE CATALOG iceberg_catalog WITH (
     'type' = 'iceberg',
     'catalog-type' = 'hadoop',
-    'warehouse' = 'file:///tmp/paimon/warehouse/iceberg',
+    'warehouse' = 'file:///tmp/paimon/warehouse',
     'cache-enabled' = 'false' -- disable iceberg catalog caching to quickly see the result
 );
 
 SHOW DATABASES IN paimon_catalog;
-SHOW TABLES IN paimon_catalog.users_ta2;
+SHOW TABLES IN paimon_catalog.users_ta_ice;
 SHOW DATABASES IN iceberg_catalog;
-SHOW TABLES IN iceberg_catalog.`default.db`;
+SHOW TABLES IN iceberg_catalog.`users_ta_ice.db`;
+DESCRIBE iceberg_catalog.`users_ta_ice.db`.user_2;
+SELECT * FROM iceberg_catalog.`users_ta_ice.db`.user_2;
