@@ -36,8 +36,9 @@ performed so that a CDC message containing the new schema can be propagated to K
 - [x] Dropping columns - deleted columns will have a NULL value
 
 ## Limitations
-- Paimon Iceberg Compatibility Mode feature is not supported in the latest 
-stable version of Paimon (v0.9) but is planned for v1.0. Though part of the 
-[v0.9 release](https://paimon.apache.org/docs/0.9/maintenance/configurations/), 
+- Paimon Iceberg Compatibility Mode feature seems to have a bug: you can describe 
+a table but running a query on the same table returns a `Table does not exist` 
+error. Though part of the [v0.9 release](https://paimon.apache.org/docs/0.9/maintenance/configurations/), 
 it has not been documented and is undergoing significant revision for the 
-[v1.0 release](https://paimon.apache.org/docs/master/maintenance/configurations/)
+[v1.0 release](https://paimon.apache.org/docs/master/maintenance/configurations/). 
+This includes replacing `metadata.iceberg-compatible (bool)` with `metadata.iceberg.storage (enum)`
