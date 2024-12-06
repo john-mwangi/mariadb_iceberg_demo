@@ -166,54 +166,30 @@ flink run \
 -- ******    PAIMON ICEBERG COMPATIBILITY   ********
 -- *************************************************
 
-CREATE CATALOG paimon_catalog WITH (
-    'type' = 'paimon',
-    'warehouse' = 'file:///tmp/paimon/warehouse',
-    'metadata.iceberg-compatible' = 'true'
-);
+-- Create Paimon Catalog
 
-CREATE TABLE paimon_catalog.`default`.cities (
-    country STRING,
-    name STRING
-);
-
-INSERT INTO paimon_catalog.`default`.cities VALUES ('usa', 'new york'), ('germany', 'berlin'), ('usa', 'chicago'), ('germany', 'hamburg');
+flink run \
+    /opt/flink/lib/paimon-flink-action-0.9.0.jar \
+    kafka_sync_table \
+    --warehouse file:///tmp/paimon/warehouse \
+    --database users_ta2 \
+    --table user_2 \
+    --primary_keys id \
+    --kafka_conf properties.bootstrap.servers=kafka:9092 \
+    --kafka_conf topic=users.db_1.user_2 \
+    --kafka_conf value.format=debezium-json \
+    --table_conf changelog-producer=input \
+    --kafka_conf scan.startup.mode=earliest-offset \
+    --table_conf metadata.iceberg-compatible=true
 
 CREATE CATALOG iceberg_catalog WITH (
     'type' = 'iceberg',
     'catalog-type' = 'hadoop',
-    'warehouse' = 'file:///tmp/paimon/warehouse',
+    'warehouse' = 'file:///tmp/paimon/warehouse/iceberg',
     'cache-enabled' = 'false' -- disable iceberg catalog caching to quickly see the result
 );
 
-SELECT * FROM paimon_catalog.`default`.cities;
+SHOW DATABASES IN paimon_catalog;
+SHOW TABLES IN paimon_catalog.users_ta2;
 SHOW DATABASES IN iceberg_catalog;
 SHOW TABLES IN iceberg_catalog.`default.db`;
-
--- Another attempt
-
-CREATE CATALOG paimon_catalog2 WITH (
-    'type' = 'paimon',
-    'warehouse' = 'file:///tmp/paimon/warehouse/iceberg',
-    'metadata.iceberg-compatible' = 'true'
-);
-
-
-CREATE TABLE paimon_catalog2.`default`.cities (
-    country STRING,
-    name STRING
-);
-
-INSERT INTO paimon_catalog2.`default`.cities VALUES ('usa', 'new york'), ('germany', 'berlin'), ('usa', 'chicago'), ('germany', 'hamburg');
-
-
-CREATE CATALOG iceberg_catalog2 WITH (
-    'type' = 'iceberg',
-    'catalog-type' = 'hadoop',
-    'warehouse' = 'file:///tmp/paimon/warehouse/iceberg',
-    'cache-enabled' = 'false' -- disable iceberg catalog caching to quickly see the result
-);
-
-
-SHOW DATABASES IN iceberg_catalog2;
-SHOW TABLES IN iceberg_catalog2.`default.db`;
