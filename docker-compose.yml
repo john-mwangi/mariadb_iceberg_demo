@@ -1,7 +1,7 @@
 services:
    sql-client:
       user: flink:flink
-      container_name: sqlclient
+      container_name: sql-client
       build:
          context: dockerfiles
          dockerfile: Dockerfile.sqlclient
@@ -17,6 +17,21 @@ services:
            jobmanager.rpc.address: jobmanager
            rest.address: jobmanager
            execution.checkpointing.interval: 3000
+      volumes:
+         - shared-tmpfs:/tmp/iceberg
+         - shared-tmpfs:/tmp/paimon
+   spark-sql:
+      build:
+         context: dockerfiles
+         dockerfile: Dockerfile.sparksql
+      container_name: spark-sql
+      ports:
+         - 4040:4040
+      depends_on:
+         - jobmanager
+         - mariadb
+      networks:
+         - iceberg_net
       volumes:
          - shared-tmpfs:/tmp/iceberg
          - shared-tmpfs:/tmp/paimon

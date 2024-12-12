@@ -1,0 +1,7 @@
+FROM apache/spark:3.5.2-scala2.12-java17-ubuntu
+
+USER spark
+
+RUN curl -Lo /opt/spark/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar https://search.maven.org/remotecontent?filepath=org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.7.1/iceberg-spark-runtime-3.5_2.12-1.7.1.jar
+
+CMD ["/opt/spark/bin/spark-sql"]
