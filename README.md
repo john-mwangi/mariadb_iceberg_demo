@@ -61,6 +61,9 @@ Below is the implementation procedure that will be followed, to be updated as ne
     - [x] Test schema evolution
     - [x] Implement Iceberg compatibility
     - [x] Test Iceberg compatibility
+- [x] Spark SQL
+    - [x] Add Spark SQL
+    - [ ] Query Iceberg catalog table using Spark SQL
 
 ## Notes
 1. Current Flink CDC version doesn't capture the schema. This is planned for [Flink CDC v3.3](https://issues.apache.org/jira/browse/FLINK-36611)
